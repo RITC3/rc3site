@@ -111,5 +111,20 @@ a .score:hover{
 
 #submit{
     margin-left:0.9375rem;
-    margin-bottom: 0px
+    margin-bottom: 0px;
+}
+
+/* about */
+.center{
+    text-align: center;
+}
+
+.ecol{
+    width: 25%;
+    float: left;
+}
+
+.lastecol{
+    width: 25%;
+    float: right;
 }
