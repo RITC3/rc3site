@@ -19,3 +19,5 @@ Now we are good to start the server locally with a fresh DB
 `python run.py` for debug
 
 `python runp.py` for production
+
+They both run on port 5000
