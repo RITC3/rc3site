@@ -19,7 +19,7 @@ git clone http://git.havefuninside.me/root/rc3site.git
 cd rc3site
 virtualenv flask
 source flask/bin/activate
-for i in ' ' -Mail -Oauthlib -WTF -SQLAlchemy Login;do pip install Flask$i;done
+for i in ' ' -Mail -Oauthlib -WTF -SQLAlchemy -Login;do pip install Flask$i;done
 pip install sqlalchemy-migrate
 ```
 
