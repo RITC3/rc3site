@@ -17,7 +17,7 @@ from config import USER_ROLES
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
-    from forms import LoginForm, EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge
+    from forms import EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge
 
 def is_admin():
     if g.user.role == 1:
