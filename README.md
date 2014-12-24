@@ -21,3 +21,8 @@ Now we are good to start the server locally with a fresh DB
 `python runp.py` for production
 
 They both run on port 5000
+
+Credit Where Credit is Due
+--------------------------
+Original site design/app - Jon Barber
+2015 Mainainers/Upgraders - Jaime Geiger/Scott Vincent
