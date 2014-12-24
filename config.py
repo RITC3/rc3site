@@ -19,7 +19,7 @@ MAIL_USE_SSL = f.readline().strip()
 MAIL_USERNAME = f.readline().strip()
 MAIL_PASSWORD = f.readline().strip()
 FACEBOOK_TOKEN = f.readline().strip()
-BASE_ADMINS = [f.readline()]
+BASE_ADMINS = f.readline().split(',')
 f.close()
 SOCIAL_MEDIA=['mail','facebook','twitter','reddit']
 DEFAULT_MEDIA=['mail','facebook']
