@@ -26,7 +26,6 @@ pip install sqlalchemy-migrate
 Now on to creating the database...
 
 ```bash
-rm -rf db_repository app.db
 ./db_create.py
 ```
 
