@@ -15,7 +15,7 @@ This guide assumes you don't have anything except python 2.7 installed and was w
 ```bash
 apt-get install python-pip
 pip install virtualenv
-git clone http://git.havefuninside.me/root/rc3site.git
+git clone git@git.havefuninside.me:root/rc3site.git
 cd rc3site
 virtualenv flask
 source flask/bin/activate
