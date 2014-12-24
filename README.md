@@ -12,7 +12,7 @@ First, you need to set up a new virtualenv for flask and install all of the modu
 
 This guide assumes you don't have anything except python 2.7 installed and was written for Ubuntu
 
-```
+```bash
 apt-get install python-pip
 pip install virtualenv
 git clone http://git.havefuninside.me/root/rc3site.git
@@ -25,7 +25,7 @@ pip install sqlalchemy-migrate
 
 Now on to creating the database...
 
-```
+```bash
 rm -rf db_repository app.db
 ./db_create.py
 ```
