@@ -1,20 +1,23 @@
 #/usr/bin/python
 """
 The main view fuction for the website. This defines each "route" and
-what should happen when a user visits teh page.
+what should happen when a user visits the page.
 """
 
 import re
+import sys
 from datetime import datetime
 from flask import render_template, flash, redirect, session, url_for, request, g, abort
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, google
-from forms import LoginForm, EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge
 from models import User, USER_ROLES, Challenge, Score
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
 from config import USER_ROLES
 import operator
+#this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
+if not "db_create" in sys.argv[0]:
+    from forms import LoginForm, EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge
 
 def is_admin():
     if g.user.role == 1:
@@ -259,7 +262,7 @@ def mailinglist():
     #mlist = User.query.filter_by(newsletter=1)
     #return mlist
     return render_template("404.html", title="Nope"), 404
-	
+
 
 @app.route('/challenges')
 def challenges():
