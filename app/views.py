@@ -1,4 +1,4 @@
-#/usr/bin/python
+#!/usr/bin/python
 """
 The main view fuction for the website. This defines each "route" and
 what should happen when a user visits the page.
@@ -42,7 +42,8 @@ def index():
     if browser == "firefox":
         flash("Firefox often doesn't play nice with Google OAuth. You may want to try chrome if it won't let you login")
 
-    all_users = User.query.all()
+    #only show the user if they are an admin
+    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
     topusers = sorted(all_users, reverse=True)
 
     return render_template("index.html", title='Home', user=user, topusers=topusers[:5])
@@ -159,7 +160,7 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    all_users = User.query.all()
+    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and not user.get_score() ]
     topusers = sorted(all_users, reverse=True)
     return render_template('scoreboard.html', title='Scoreboard', users=topusers)
 
