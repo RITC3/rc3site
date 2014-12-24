@@ -1,0 +1,6 @@
+.git
+*.db
+flask
+tmp
+db_repo*
+*.pyc
