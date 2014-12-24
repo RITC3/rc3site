@@ -1,0 +1,40 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Edit Challenge</h2>
+<form action="" method="POST" name="edit_challenge">
+	{{form.hidden_tag()}}
+	<div class="small-6 columns">
+		<div class="row panel">
+			<div class="small-8">
+				Challenge Name:
+			</div>
+			<div class="small-8">
+				{{form.name}}
+				{% for error in form.errors.name %}
+				<span style="color: red;">[{{error}}]</span>
+				{% endfor %}
+			</div>
+			<div class="small-6 medium-3">
+				Date:
+			</div>
+			<div class="small-3 medium-3">
+				{{form.date}}
+			</div>
+			<div class="small-6 medium-3">
+				About:
+			</div>
+			<div class="small-12 medium-12">
+				{{form.about(rows = 8)}}
+			</div>
+			<div class="small-3 medium-3">
+				
+			</div>
+			<input type="submit" class="button" value="Save Changes">
+			<a href="{{ url_for('challenge', chall = challenge.name )}}" class="button">Back to Challenge</a>
+		</div>
+	</div>
+</form>
+
+{% endblock %}

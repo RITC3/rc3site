@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="/static/css/zocial.css">
+<div class="row radius panel account-info">
+    <div class="small-5 columns radius">
+        <img src="/static/img/logo.png" alt="RC3">
+    </div>
+    <div class="small-7 columns">
+        Welcome to the new RIT Competitive Cybersecurity Club website. This will be used to track each member's 
+        points throughout the semester, as well as be a resource for presentations, news, and tools.
+        
+        {% if g.user.is_authenticated() %}
+            <br>Signups for the CTF are <a href="https://docs.google.com/a/g.rit.edu/forms/d/1GewKEoCDeByudHKoipp30WvpuOY2xhoXeI91lIhqoU0/viewform" target="_blank">here</a>
+        {% endif %}
+    </div>
+    
+    <div class="small-7 columns home-login">
+    {% if g.user.is_authenticated() %}
+        <h4>Welcome {{g.user.nickname}}!</h4>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="zocial googleplus">Sign in with RIT Google</a>
+    {% endif %}
+    </div>
+</div>

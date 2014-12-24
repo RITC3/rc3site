@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+ 
+ <h3>Contact Us</h3>
+
+ <form action="" method="POST" name="contact">
+ 	{{form.hidden_tag()}}
+ 	<div class="large-6 columns panel">
+	 	<div class="row">
+	 		<div class="large-8 columns">
+	 			<label>Your Name:* {% for error in form.errors.name %}<span style="color: red;">This field is required</span>{% endfor %}
+					{{form.name}}
+	 			</label>
+	 		</div>
+	 	</div>
+	 	<div class="row">
+	 		<div class="large-8 columns">
+	 			<label>Your Email:* {% for error in form.errors.email %}<span style="color: red;">This field is required</span>{% endfor %}
+					{{form.email}}
+	 			</label>
+	 		</div>
+	 	</div>
+	 	<div class="row">
+	 		<div class="large-10 columns">
+	 			<label>Your Message:* {% for error in form.errors.body %}<span style="color: red;">This field is required</span>{% endfor %}
+					{{form.body(rows = 5)}}
+	 			</label>
+	 		</div>
+	 	</div>
+	 	<p><input type="submit" class="button" value="Submit"></p>
+ 	</div>
+ </form>
+ 
+{% endblock %}

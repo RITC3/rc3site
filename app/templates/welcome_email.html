@@ -1,0 +1,16 @@
+<div class="panel"></div>
+<p>Hi {{user.nickname}}!</p>
+<br>
+<p>Welcome to RC3! Thanks for signing up. Each week we'll send you a little heads up about what we did last week and what's in store for this week. As a reminder, we meet Fridays from 12pm-2pm in 70-2410, the security lab.</p>
+<br>
+<p>I look forward to seeing you at RC3!</p>
+<br>
+<p>Jon Barber <br>	
+{{url_for('index', _external = True)}} <br>
+RC3 President <br>
+SPARSA Vice President of Research <br></p>
+<br>
+<br>
+<br>
+</div>
+ If you don't like emails, feel free to unsubscribe at {{url_for('unsubscribe', _external = True)}}

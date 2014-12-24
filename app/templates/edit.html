@@ -1,0 +1,42 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Edit Your Profile</h1>
+<form action="" method="POST" name="edit">
+	{{form.hidden_tag()}}
+	<div class="large-6">
+		<div class="row panel">
+			<div class="small-6 medium-3">
+				Your nickname:
+			</div>
+			<div class="small-5 medium-5">
+				{{form.nickname}}
+				{% for error in form.errors.nickname %}
+				<span style="color: red;">[{{error}}]</span>
+				{% endfor %}
+			</div>
+			<div class="small-6 medium-3">
+				Your major:
+			</div>
+			<div class="small-3 medium-3">
+				{{form.major}}
+			</div>
+			<div class="small-6 medium-3">
+				About Yourself:
+			</div>
+			<div class="small-12 medium-12">
+				{{form.about_me(rows = 4)}}
+			</div>
+			<div class="small-6 medium-6">
+				Get Email Updates:  {{form.newsletter}}
+			</div>
+			<div class="small-3 medium-3">
+				
+			</div>
+			<input type="submit" class="button" value="Save Changes">
+			<a href="{{ url_for('user', username = user.username )}}" class="button">Back to Profile</a>
+		</div>
+	</div>
+</form>
+{% endblock %}

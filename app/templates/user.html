@@ -1,0 +1,53 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+ 
+{% block content %}
+
+<div class="row radius panel account-info">
+ 
+    <div class="small-12 medium-6 large-4 columns">
+ 
+        <img class="th" src="{{user.avatar(128)}}" alt="{{user.nickname}}">
+        {% if user.id == g.user.id %} 
+            <div class="small-12 columns">
+                <span data-tooltip aria-haspopup="true" class="has-tip" title="Sign up on gravatar.com using {{user.email}} and your picture will show up here">
+                How do I change my avatar?
+                </span>
+                
+            </div>
+        {% endif %}
+    </div>
+
+
+
+    <div class="small-12 medium-6 large-8 columns">
+ 
+        <div class="row">
+            <div class="small-12 columns">
+                <h3> {{user.nickname}}<em class="text-small"> [ {{user.username}} ]</em></h3>
+            </div>
+            <div class="small-12 columns">
+            {% if user.get_score() %}<span class="score"> {{user.get_score()}} Points</span>{% endif %}    
+            </div>
+
+            <div class="small-12 columns">
+            </div>
+            <div class="small-12 columns">
+            {% if user.about_me %}<div class="about-info small-12 columns" data-equalizer-watch>{{user.about_me}}</div>{% endif %}
+            </div>
+        </div>
+        <div class="row">
+            {% if user.id == g.user.id %} <div class="small-3 columns"><a class="button tiny success submit" href="{{url_for('edit')}}">EDIT</a></div>{% endif %}
+        </div>
+    </div>
+    {{user.pic}}
+    {% if user.last_seen %}<div class="small-9 columns small-text-right"><em class="smaller-text">Last login on {{user.last_seen_print()}}</em></div>{% endif %}
+</div>
+ 
+{% for score in user.scores %}
+ 
+ {% include 'history.html' %}
+ 
+{% endfor %}
+ 
+{% endblock %}

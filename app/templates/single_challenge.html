@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2> <a href="{{ url_for('challenges') }}">Challenges</a>/{{challenge.name}}</h2>
+<div class="small-8 columns panel">
+        <h3>About</h3>
+        <p>
+        <div class="small-12 columns about-info" data-equalizer-watch>{{challenge.about}}</div></p>
+        {% if challenge.total_users() > 0 %}
+        <h3>Scores</h3>
+        <p>
+        {% set users = challenge.get_users() %}
+            {% include "generate_scoreboard.html" %}
+        </p>
+        {% endif %}
+    {% if user.role == 1 %}
+    <a href="{{ url_for('edit_challenge', chall = challenge.name )}}" class="button success"> Edit</a>
+    <a href="" class="button alert"> Delete</a>
+    {% endif %}
+    </div>
+{% endblock %}

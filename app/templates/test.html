@@ -1,0 +1,38 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+ 
+{% block content %}
+
+<ul class="tabs" data-tab role="tablist">
+  <li class="tab-title active" role="presentational" ><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" controls="panel2-1">Tab 1</a></li>
+  <li class="tab-title" role="presentational" ><a href="#panel2-2" role="tab" tabindex="0"aria-selected="false" controls="panel2-2">Tab 2</a></li>
+  <li class="tab-title" role="presentational"><a href="#panel2-3" role="tab" tabindex="0" aria-selected="false" controls="panel2-3">Tab 3</a></li>
+  <li class="tab-title" role="presentational" ><a href="#panel2-4" role="tab" tabindex="0" aria-selected="false" controls="panel2-4">Tab 4</a></li>
+</ul>
+<div class="tabs-content">
+  <section role="tabpanel" aria-hidden="false" class="content active" id="panel2-1">
+    <h2>First panel content goes here...</h2>
+  </section>
+  <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
+    <h2>Second panel content goes here...</h2>
+  </section>
+  <section role="tabpanel" aria-hidden="true" class="content" id="panel2-3">
+    <h2>Third panel content goes here...</h2>
+  </section>
+  <section role="tabpanel" aria-hidden="true" class="content" id="panel2-4">
+    <h2>Fourth panel content goes here...</h2>
+  </section>
+</div>
+
+<a href="#" data-dropdown="drop1">Has Dropdown</a>
+<ul id="drop1" class="f-dropdown" data-dropdown-content>
+  <li><a href="#">This is a link</a></li>
+  <li><a href="#">This is another</a></li>
+  <li><a href="#">Yet another</a></li>
+</ul>
+<a href="#" data-dropdown="drop2">Has Content Dropdown</a>
+<div id="drop2" data-dropdown-content class="f-dropdown content">
+  <p>Some text that people will think is awesome! Some text that people will think is awesome! Some text that people will think is awesome!</p>
+</div>
+
+{% endblock %}

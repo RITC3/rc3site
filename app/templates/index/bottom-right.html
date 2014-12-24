@@ -1,0 +1,14 @@
+<h3><strong>Top Scores</strong></h3>
+<div class="panel">
+	<table>
+  		<tbody>
+			{% for user in topusers %}
+			<tr valign="center">
+                <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
+                <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
+                <td>{{user.get_score()}}</td>
+            </tr>
+            {% endfor %}
+		</tbody>
+    </table>
+</div>

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+
+{% for challenge in challenges %}
+        <div class="small-12 large-5 large-offset-1 columns left">
+                <ul class="pricing-table">
+                        <li class="title">{{challenge.date.strftime('%m-%d-%Y')}}</li>
+                        <li class="price"> <a href="">{{challenge.name}}</a></li>
+                        <li class="description">{{challenge.about}}</li>
+                        <li class="bullet-item"><a href="#" data-dropdown="hover1" data-options="is_hover:true">{{challenge.total_users()}} Participants</a></li>                        {% if challenge.total_users()> %}
+                        	<ul id="hover1" class="f-dropdown" data-dropdown-content>
+					{% for user in challenge.get_users() %}
+						<li><a href="#">{{user.nickname}}</a></li>
+					{% endfor %}
+				</ul>
+                        {% endif %}
+                        {% if user.role == 1 %}
+                        <li class="bullet-item">
+                        <a href="" class="button success"> Edit</a>
+                        <a href="" class="button alert"> Delete</a>
+                        {% endif %}
+                        </li>
+                </ul>
+        </div>          
+
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
