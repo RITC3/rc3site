@@ -1,9 +1,7 @@
 import os
 
-f = open('app.stuff', 'r')
-
 basedir = os.path.abspath(os.path.dirname(__file__))
-
+f = open(os.path.join(basedir, 'app.stuff') , 'r')
 
 CSRF_ENABLED = True
 
