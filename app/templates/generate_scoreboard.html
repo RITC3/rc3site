@@ -5,19 +5,23 @@
         <tbody>
             {% if users %}
             {% for user in users %}
-            <tr valign="center">
-                <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
-                <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
-                {% if challenge %}
-                    <td>{{user.get_score(challenge)}}</td>
-                {% else %}
-                    <td>{{user.get_score()}}</td>
+                {% if user.get_score() %}
+                {% if not user.role %}
+                    <tr valign="center">
+                        <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
+                        <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
+                        {% if challenge %}
+                            <td>{{user.get_score(challenge)}}</td>
+                        {% else %}
+                            <td>{{user.get_score()}}</td>
+                        {% endif %}
+                    </tr>
                 {% endif %}
-            </tr>
+                {% endif %}
             {% endfor %}
             {% endif %}
         </tbody>
 
     </table>
-    
+
 </div>
