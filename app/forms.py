@@ -4,8 +4,8 @@ from wtforms import TextField, BooleanField, TextAreaField, SelectField, Integer
 from wtforms.fields import DateField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
-from app.models import User, Challenge
-from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES
+from app.models import User, Challenge, Presentation
+from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS
 
 def get_sorted_userlist():
     userchoices = []
@@ -183,5 +183,24 @@ class Add_Presentation(Form):
         if not Form.validate(self):
             return False
         if not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
+            return False
+        return True
+
+class EditPresentation(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    presentations = [ (x.id, "{} Week {} - {}".format(SEMESTERS[x.semester_id], x.week, x.name)) for x in Presentation.query.all() ]
+    pres = SelectField('pres', choices=presentations, coerce=int)
+    weeks = [ (x, "Week {}".format(x)) for x in range(1,16)]
+    week = SelectField('week', choices=weeks, coerce=int)
+    name = TextField('name')
+    link = TextField('link')
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if self.link.data and not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
             return False
         return True

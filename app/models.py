@@ -90,6 +90,7 @@ class Post(db.Model):
 class Challenge(db.Model):
     """docstring for Challenge"""
     id = db.Column(db.Integer, primary_key = True)
+    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
     name = db.Column(db.String(64), index = True, unique= True)
     about = db.Column(db.String(1000), index = True)
     date = db.Column(db.DateTime)

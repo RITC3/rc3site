@@ -17,7 +17,7 @@ from config import USER_ROLES, SEMESTERS, CURRENT_SEMESTER, SEMESTERS_DICT
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
-    from forms import EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge, Add_Presentation
+    from forms import *
 
 def is_admin():
     if g.user.role == 1:
@@ -268,7 +268,27 @@ def admin():
         else:
             flash("Invalid Presentation")
 
-    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres}
+    #presentation editing
+    edit_pres = EditPresentation()
+    if request.form.get('submit', None) == 'Edit Presentation':
+        if edit_pres.validate_on_submit():
+            pres = Presentation.query.filter_by(id=edit_pres.pres.data).first()
+            if edit_pres.week:
+                pres.week = edit_pres.week.data
+            if str(edit_pres.link.data) != "":
+                pres.link = edit_pres.link.data
+            if str(edit_pres.name.data) != "":
+                pres.name = edit_pres.name.data
+            db.session.add(pres)
+            db.session.commit()
+            flash("Presentation Week {} - {} editied successfully".format(edit_pres.week.data, edit_pres.name.data))
+            return redirect(url_for('admin'))
+        else:
+            flash("Invalid Presentation Edit")
+
+
+
+    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
 @app.route('/mailinglist')
