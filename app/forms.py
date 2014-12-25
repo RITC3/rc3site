@@ -169,3 +169,19 @@ class Send_Newsletter(Form):
     # media = MultiCheckboxField('media', choices=choices)
     submit = SubmitField('submit')
 
+class Add_Presentation(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    weeks = [ (x, "Week {}".format(x)) for x in range(1,16)]
+    week = SelectField('week', choices=weeks, coerce=int)
+    name = TextField('name', validators=[DataRequired()])
+    link = TextField('link', validators=[DataRequired()])
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
+            return False
+        return True

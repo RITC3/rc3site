@@ -10,14 +10,14 @@ from datetime import datetime
 from flask import render_template, flash, redirect, session, url_for, request, g, abort
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, google
-from models import User, USER_ROLES, Challenge, Score
+from models import User, USER_ROLES, Challenge, Score, Presentation
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
 from config import USER_ROLES
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
-    from forms import EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge
+    from forms import EditForm, ContactUs, Create_Challenge, Update_Score, Send_Newsletter, Permission_User, Add_Subscriber, Edit_Challenge, Add_Presentation
 
 def is_admin():
     if g.user.role == 1:
@@ -119,8 +119,8 @@ def user(username):
 @app.route('/resources')
 @login_required
 def resources():
-    res = []
-    return render_template('resources.html', title='Resources')
+    pres = Presentation.query.all()
+    return render_template('resources.html', title='Resources', pres_list=pres)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -250,9 +250,18 @@ def admin():
                 email, major = user.split('/', 1)
                 flash(email + ' is a ' + major)
             return redirect(url_for('admin'))
+    add_pres = Add_Presentation()
+    if request.form.get('submit', None) == 'Add Presentation':
+        if add_pres.validate_on_submit():
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data)
+            db.session.add(new_pres)
+            db.session.commit()
+            flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
+            return redirect(url_for('admin'))
+        else:
+            flash("Invalid Presentation")
 
-
-    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub}
+    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
 @app.route('/mailinglist')

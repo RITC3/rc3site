@@ -1,6 +1,6 @@
 from app import db
 from hashlib import md5
-from config import USER_ROLES
+from config import USER_ROLES, CURRENT_SEMESTER
 from sqlalchemy import desc
 
 class User(db.Model):
@@ -134,3 +134,14 @@ class Score(db.Model):
                 return 1
         except :
             return -1
+
+class Presentation(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
+    name = db.Column(db.String(100))
+    week = db.Column(db.SmallInteger)
+    link = db.Column(db.String(300))
+    timestamp = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<Presentation Week {}: {}>'.format(self.pres_week, self.pres_name)
