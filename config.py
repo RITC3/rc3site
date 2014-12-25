@@ -22,3 +22,5 @@ f.close()
 SOCIAL_MEDIA=['mail','facebook','twitter','reddit']
 DEFAULT_MEDIA=['mail','facebook']
 USER_ROLES = {'admin':1,'user':0}
+SEMESTERS = {'Fall2014':0, 'Spring2015':1}
+CURRENT_SEMESTER = SEMESTERS['Fall2014']
