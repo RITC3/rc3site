@@ -1,7 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="text-center">Fall 2014 Resources</h2>
+<div class="small-12">
+    <div class="row panel">
+    {% for semester in semesters %}
+    <div class="small-3 columns ecol left">
+    <a href='/resources/{{semester}}'>{{semester}}</a>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+<h2 class="text-center">{{semester}} Resources</h2>
+
 {% if pres_list %}
 {% for pres in pres_list %}
 

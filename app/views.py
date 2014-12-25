@@ -13,7 +13,7 @@ from app import app, db, lm, google
 from models import User, USER_ROLES, Challenge, Score, Presentation
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
-from config import USER_ROLES
+from config import USER_ROLES, SEMESTERS, CURRENT_SEMESTER, SEMESTERS_DICT
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
@@ -119,8 +119,13 @@ def user(username):
 @app.route('/resources')
 @login_required
 def resources():
-    pres = Presentation.query.all()
-    return render_template('resources.html', title='Resources', pres_list=pres)
+    return redirect('/resources/{}'.format(SEMESTERS[CURRENT_SEMESTER]))
+
+@app.route('/resources/<semester>')
+@login_required
+def sem_resources(semester):
+    pres = [ p for p in Presentation.query.all() if p.semester_id == SEMESTERS_DICT[semester] ]
+    return render_template('resources.html', title='Resources', pres_list=pres, semester=semester, semesters=SEMESTERS)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -250,6 +255,8 @@ def admin():
                 email, major = user.split('/', 1)
                 flash(email + ' is a ' + major)
             return redirect(url_for('admin'))
+
+    #presentation form generation
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
