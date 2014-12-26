@@ -37,7 +37,7 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def index():
-    user = g.user
+    usern = g.user
     browser = request.user_agent.browser
     if browser == "firefox":
         flash("Firefox often doesn't play nice with Google OAuth. You may want to try chrome if it won't let you login")
@@ -46,7 +46,7 @@ def index():
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
     topusers = sorted(all_users, reverse=True)
 
-    return render_template("index.html", title='Home', user=user, topusers=topusers[:5])
+    return render_template("index.html", title='Home', user=usern, topusers=topusers[:5])
 
 @lm.user_loader
 def load_user(id):
@@ -170,9 +170,17 @@ def scoreboard():
 @app.route('/scoreboard/<semester>')
 def sem_scoreboard(semester):
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=semester) ]
-    topusers = sorted(all_users, reverse=True)
-    return render_template('scoreboard.html', title='Scoreboard', users=topusers, semester=semester, semesters=SEMESTERS)
+    sort_user_scores(all_users, semester)
+    return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=semester, semesters=SEMESTERS)
 
+def sort_user_scores(l, semester):
+    for i in xrange(1, len(l)):
+        j = i-1
+        key = l[i]
+        while (l[j].get_score(semester=semester) < key.get_score(semester=semester)) and (j >= 0):
+           l[j+1] = l[j]
+           j -= 1
+        l[j+1] = key
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():

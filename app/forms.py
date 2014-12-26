@@ -5,7 +5,7 @@ from wtforms.fields import DateField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
 from app.models import User, Challenge, Presentation
-from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS
+from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS, CURRENT_SEMESTER
 
 def get_sorted_userlist():
     userchoices = []
@@ -109,7 +109,7 @@ class Update_Score(Form):
         Form.__init__(self, *args, **kwargs)
     userchoices = get_sorted_userlist()
     challengechoices = []
-    challenges = Challenge.query.all()
+    challenges = Challenge.query.filter_by(semester_id=CURRENT_SEMESTER)
     for chall in challenges:
         challengechoices.append((chall.id, chall.name))
     user = SelectField('user', choices = userchoices)
@@ -190,7 +190,7 @@ class EditPresentation(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    presentations = [ (x.id, "{} Week {} - {}".format(SEMESTERS[x.semester_id], x.week, x.name)) for x in Presentation.query.all() ]
+    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER) ]
     pres = SelectField('pres', choices=presentations, coerce=int)
     name = TextField('name')
     link = TextField('link')
