@@ -114,7 +114,7 @@ def user(username):
         flash('User not found.')
         abort(404)
 
-    return render_template('user.html', title=user.nickname, user=user)
+    return render_template('user.html', title=user.nickname, user=user, semester=SEMESTERS[CURRENT_SEMESTER], semesters=SEMESTERS)
 
 @app.route('/resources')
 @login_required

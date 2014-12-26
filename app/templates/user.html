@@ -13,7 +13,7 @@
                 <span data-tooltip aria-haspopup="true" class="has-tip" title="Sign up on gravatar.com using {{user.email}} and your picture will show up here">
                 How do I change my avatar?
                 </span>
-                
+ 
             </div>
         {% endif %}
     </div>
@@ -27,7 +27,7 @@
                 <h3> {{user.nickname}}<em class="text-small"> [ {{user.username}} ]</em></h3>
             </div>
             <div class="small-12 columns">
-            {% if user.get_score() %}<span class="score"> {{user.get_score()}} Points</span>{% endif %}    
+            {% if user.get_score(semester=semester) %}<span class="score"> {{user.get_score(semester=semester)}} Points</span>{% endif %}    
             </div>
 
             <div class="small-12 columns">
