@@ -358,7 +358,7 @@ def edit_challenge(semester, chall):
         form.name.data = challenge.name
         form.about.data = challenge.about
         form.date.data = challenge.date
-    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester_id)
+    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester_id, semesters=SEMESTERS)
 
 @app.route('/unsubscribe')
 @login_required
