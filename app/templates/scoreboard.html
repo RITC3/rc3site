@@ -3,8 +3,17 @@
  
 {% block content %}
 
-<h2 class="text-center">2014 Fall Semester Scoreboard</h2>
+<div class="small-12">
+    <div class="row panel">
+    {% for semester in semesters %}
+    <div class="small-3 columns ecol left">
+    <a href='/scoreboard/{{semester}}'>{{semester}}</a>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+<h2 class="text-center">{{semesters[semester]}} Semester Scoreboard</h2>
 {% include "generate_scoreboard.html" %}
--
+ 
 {% endblock %}
 

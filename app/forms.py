@@ -192,8 +192,6 @@ class EditPresentation(Form):
 
     presentations = [ (x.id, "{} Week {} - {}".format(SEMESTERS[x.semester_id], x.week, x.name)) for x in Presentation.query.all() ]
     pres = SelectField('pres', choices=presentations, coerce=int)
-    weeks = [ (x, "Week {}".format(x)) for x in range(1,16)]
-    week = SelectField('week', choices=weeks, coerce=int)
     name = TextField('name')
     link = TextField('link')
     submit = SubmitField('submit')

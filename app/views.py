@@ -165,9 +165,13 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and not user.get_score() ]
+    return redirect("/scoreboard/{}".format(SEMESTERS[CURRENT_SEMESTER]))
+
+@app.route('/scoreboard/<semester>')
+def sem_scoreboard(semester):
+    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=semester) ]
     topusers = sorted(all_users, reverse=True)
-    return render_template('scoreboard.html', title='Scoreboard', users=topusers)
+    return render_template('scoreboard.html', title='Scoreboard', users=topusers, semester=semester, semesters=SEMESTERS)
 
 
 @app.route('/contact', methods=['GET', 'POST'])
@@ -184,7 +188,6 @@ def contact():
 
 @app.route('/about')
 def about():
-    resources= []
     return render_template('about.html', title='About')
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -200,10 +203,12 @@ def admin():
             db.session.commit()
             flash('Challenge created!')
             return redirect(url_for('admin'))
+
     update_score = Update_Score()
     #update_score.choices = [(c.id, c.name) for c in Challenge.query.order_by('date')] query shit right at some point
     if request.form.get('submit', None) == 'Update Score':
         if update_score.validate_on_submit():
+            semester_id = Challenge.query.filter_by(id=update_score.data['challenge']).first().semester_id
             existing_score = Score.query.filter_by(user_id=update_score.data['user'], challenge_id=update_score.data['challenge']).first()
             if existing_score:
                 existing_score.points = update_score['points'].data
@@ -212,7 +217,7 @@ def admin():
                 flash('Score updated!')
                 return redirect(url_for('admin'))
             else:
-                new_score = Score(user_id=update_score.data['user'], challenge_id=update_score.data['challenge'], points=update_score.data['points'])
+                new_score = Score(user_id=update_score.data['user'], challenge_id=update_score.data['challenge'], points=update_score.data['points'], semester_id=semester_id)
                 db.session.add(new_score)
                 db.session.commit()
                 flash('Score created!')
@@ -303,20 +308,24 @@ def mailinglist():
 
 @app.route('/challenges')
 def challenges():
-    challenges = Challenge.query.all()
-    return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user)
+    return redirect('/challenges/{}'.format(SEMESTERS[CURRENT_SEMESTER]))
 
-@app.route('/challenge/<chall>')
-def challenge(chall):
-    challenge = Challenge.query.filter_by(name=chall).first()
-    return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user)
+@app.route('/challenges/<semester>')
+def sem_challenges(semester):
+    challenges = Challenge.query.filter_by(semester_id=SEMESTERS_DICT[semester])
+    return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user, semester=semester, semesters=SEMESTERS)
 
-@app.route('/edit_challenge/<chall>', methods = ['GET','POST'])
+@app.route('/challenges/<semester>/<chall>')
+def challenge(semester, chall):
+    challenge = Challenge.query.filter_by(name=chall, semester_id=SEMESTERS_DICT[semester]).first()
+    return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user, semester=semester, semesters=SEMESTERS_DICT)
+
+@app.route('/edit_challenge/<semester>/<chall>', methods = ['GET','POST'])
 @login_required
-def edit_challenge(chall):
+def edit_challenge(semester, chall):
     #if not is_admin():
     #    return render_template('404.html', title='404'), 404
-    challenge = Challenge.query.filter_by(name=chall).first()
+    challenge = Challenge.query.filter_by(name=chall, semester_id=SEMESTERS_DICT[semester]).first()
     form = Edit_Challenge(challenge.name)
     if form.validate_on_submit():
         challenge.name = form.name.data
@@ -325,12 +334,12 @@ def edit_challenge(chall):
         db.session.add(challenge)
         db.session.commit()
         flash('Your changes have been saved!')
-        return redirect(url_for('challenge', chall = form.name.data ))
+        return redirect(url_for('challenge', chall = form.name.data, semester=semester ))
     else:
         form.name.data = challenge.name
         form.about.data = challenge.about
         form.date.data = challenge.date
-    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge)
+    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester_id)
 
 @app.route('/unsubscribe')
 @login_required

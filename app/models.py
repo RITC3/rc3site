@@ -1,6 +1,6 @@
 from app import db
 from hashlib import md5
-from config import USER_ROLES, CURRENT_SEMESTER
+from config import USER_ROLES, CURRENT_SEMESTER, SEMESTERS, SEMESTERS_DICT
 from sqlalchemy import desc
 
 class User(db.Model):
@@ -30,15 +30,18 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.id)
 
-    def get_score(self, challenge='all'):
+    def get_score(self, challenge='all', semester=SEMESTERS[CURRENT_SEMESTER]):
+        sem_id = SEMESTERS_DICT[semester]
+        total = 0
         if challenge is 'all':
-            total = 0
             for s in self.scores:
-                total+= s.points
+                if s.semester_id == sem_id:
+                    total += s.points
         else:
             for s in self.scores:
                 if s.challenge is challenge:
-                    total = s.points
+                    if s.semester_id == sem_id:
+                        total = s.points
         return total
 
     def last_seen_print(self):
@@ -123,6 +126,7 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     challenge_id = db.Column(db.Integer, db.ForeignKey('challenge.id'))
     points = db.Column(db.Integer, default = 0)
+    semester_id = db.Column(db.Integer, default=CURRENT_SEMESTER)
 
     def __repr__(self):
         return '<Score %r : %r>' % (self.user_id, self.points)
