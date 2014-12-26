@@ -4,8 +4,8 @@ from wtforms import TextField, BooleanField, TextAreaField, SelectField, Integer
 from wtforms.fields import DateField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
-from app.models import User, Challenge
-from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES
+from app.models import User, Challenge, Presentation
+from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS, CURRENT_SEMESTER
 
 def get_sorted_userlist():
     userchoices = []
@@ -109,7 +109,7 @@ class Update_Score(Form):
         Form.__init__(self, *args, **kwargs)
     userchoices = get_sorted_userlist()
     challengechoices = []
-    challenges = Challenge.query.all()
+    challenges = Challenge.query.filter_by(semester_id=CURRENT_SEMESTER)
     for chall in challenges:
         challengechoices.append((chall.id, chall.name))
     user = SelectField('user', choices = userchoices)
@@ -169,3 +169,36 @@ class Send_Newsletter(Form):
     # media = MultiCheckboxField('media', choices=choices)
     submit = SubmitField('submit')
 
+class Add_Presentation(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    weeks = [ (x, "Week {}".format(x)) for x in range(1,16)]
+    week = SelectField('week', choices=weeks, coerce=int)
+    name = TextField('name', validators=[DataRequired()])
+    link = TextField('link', validators=[DataRequired()])
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
+            return False
+        return True
+
+class EditPresentation(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER) ]
+    pres = SelectField('pres', choices=presentations, coerce=int)
+    name = TextField('name')
+    link = TextField('link')
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        if self.link.data and not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
+            return False
+        return True

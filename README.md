@@ -4,29 +4,14 @@ Well here it is up on git! Neat!
 
 Setup
 -----
-Since the site relies on a python virtualenv you cannot just clone it and go...
-
-You'll also need to create a database.
-
-First, you need to set up a new virtualenv for flask and install all of the modules.
+Since the site relies on a python virtualenv you have to run the setup script before using it
 
 This guide assumes you don't have anything except python 2.7 installed and was written for Ubuntu
 
 ```bash
-apt-get install python-pip
-pip install virtualenv
 git clone git@git.havefuninside.me:root/rc3site.git
 cd rc3site
-virtualenv flask
-source flask/bin/activate
-for i in ' ' -Mail -Oauthlib -WTF -SQLAlchemy -Login;do pip install Flask$i;done
-pip install sqlalchemy-migrate
-```
-
-Now on to creating the database...
-
-```bash
-./db_create.py
+./setup.bash
 ```
 
 Now we are good to start the server locally with a fresh DB
@@ -34,3 +19,10 @@ Now we are good to start the server locally with a fresh DB
 `python run.py` for debug
 
 `python runp.py` for production
+
+They both run on port 5000
+
+Credit Where Credit is Due
+--------------------------
+Original site design/app - Jon Barber
+2015 Mainainers/Upgraders - Jaime Geiger/Scott Vincent

@@ -22,3 +22,6 @@ f.close()
 SOCIAL_MEDIA=['mail','facebook','twitter','reddit']
 DEFAULT_MEDIA=['mail','facebook']
 USER_ROLES = {'admin':1,'user':0}
+SEMESTERS = ['Fall 2014', 'Spring 2015']
+SEMESTERS_DICT = { sem:id for id, sem in enumerate(SEMESTERS)}
+CURRENT_SEMESTER = SEMESTERS_DICT['Spring 2015']

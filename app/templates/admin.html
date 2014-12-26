@@ -5,32 +5,36 @@
 
 <div class="row admin-info">
         <h2>Admin Stuff</h2>
-			<dl class="tabs radius" data-tab>
-				<dd class="tab-title active"><a href="#panel2-1">Send Newsletter</a></dd>
-				<dd class="tab-title"><a href="#panel2-2">Create Challenge</a></dd>
-				<dd class="tab-title"><a href="#panel2-3">Update Score</a></dd>
-				<dd class="tab-title"><a href="#panel2-4">User Permissions</a></dd>
-				<dd class="tab-title"><a href="#panel2-5">Add Subscriber</a></dd>
-			</dl>
-			<div class="tabs-content">
-				<div class="content active" id="panel2-1">
-					<p>{% include "admin/send_newsletter.html" %}</p>
-				</div>
-				<div class="content" id="panel2-2">
-					<p>{% include "admin/create_challenge.html" %}</p>
-				</div>
-				<div class="content" id="panel2-3">
-					<p>{% include "admin/update_score.html" %}</p>		
-				</div>
-				<div class="content" id="panel2-4">
-					<p>{% include "admin/permissions.html" %}</p>
-				</div>
-				<div class="content" id="panel2-5">
-					<p>{% include "admin/add_subscriber.html" %}</p>
-				</div>
-         	</div>
- 
+            <dl class="tabs radius" data-tab>
+                <dd class="tab-title active"><a href="#panel2-1">Send Newsletter</a></dd>
+                <dd class="tab-title"><a href="#panel2-2">Create Challenge</a></dd>
+                <dd class="tab-title"><a href="#panel2-3">Update Score</a></dd>
+                <dd class="tab-title"><a href="#panel2-4">User Permissions</a></dd>
+                <dd class="tab-title"><a href="#panel2-5">Add Subscriber</a></dd>
+                <dd class="tab-title"><a href="#panel2-6">Add Presentation</a></dd>
+            </dl>
+            <div class="tabs-content">
+                <div class="content active" id="panel2-1">
+                    <p>{% include "admin/send_newsletter.html" %}</p>
+                </div>
+                <div class="content" id="panel2-2">
+                    <p>{% include "admin/create_challenge.html" %}</p>
+                </div>
+                <div class="content" id="panel2-3">
+                    <p>{% include "admin/update_score.html" %}</p>
+                </div>
+                <div class="content" id="panel2-4">
+                    <p>{% include "admin/permissions.html" %}</p>
+                </div>
+                <div class="content" id="panel2-5">
+                    <p>{% include "admin/add_subscriber.html" %}</p>
+                </div>
+                <div class="content" id="panel2-6">
+                    <p>{% include "admin/add_presentation.html" %}</p>
+                </div>
+             </div>
+
 </div>
- 
+
 
 {% endblock %}

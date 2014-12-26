@@ -1,21 +1,21 @@
 <div class="large-7 columns">
-	<h4><strong>Permission User</strong></h4>
-	<div class="panel">
-		<form action="" method="POST" name="update_score">
-			{{ADMIN_FORMS['permission_user'].hidden_tag()}}
-			{% for error in ADMIN_FORMS['permission_user'].errors.user %}<span style="color: red;">{{error}}</span>{% endfor %}
-			{% for error in ADMIN_FORMS['permission_user'].errors.challenge %}<span style="color: red;">{{error}}</span>{% endfor %}
-			{% for error in ADMIN_FORMS['permission_user'].errors.points %}<span style="color: red;">{{error}}</span>{% endfor %}
-			<div class="large-4 columns">
-				<label>{{ADMIN_FORMS['permission_user'].user}}</label>
-			</div>
-			<div class="large-4 columns">
-				<label>{{ADMIN_FORMS['permission_user'].role}}</label>
-			</div>
-			<div class="large-4 columns">
-				<label>{{ADMIN_FORMS['permission_user'].position}}</label>
-			</div>
-			{{ADMIN_FORMS['permission_user'].submit(class="button", value = 'Update User')}}
-		</form>
-	</div>
+    <h4><strong>User Permissions</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="update_permissions">
+            {{ADMIN_FORMS['permission_user'].hidden_tag()}}
+            {% for error in ADMIN_FORMS['permission_user'].errors.user %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['permission_user'].errors.challenge %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['permission_user'].errors.points %}<span style="color: red;">{{error}}</span>{% endfor %}
+            <div class="large-4 columns">
+                <label>User {{ADMIN_FORMS['permission_user'].user}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Permission {{ADMIN_FORMS['permission_user'].role}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Position {{ADMIN_FORMS['permission_user'].position}}</label>
+            </div>
+            {{ADMIN_FORMS['permission_user'].submit(class="button", value = 'Update User')}}
+        </form>
+    </div>
 </div>

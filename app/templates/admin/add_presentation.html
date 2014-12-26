@@ -1,0 +1,40 @@
+<div class="large-7 columns">
+    <h4><strong>Add Presentation</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="add_presentation">
+            {{ADMIN_FORMS['add_presentation'].hidden_tag()}}
+            {% for error in ADMIN_FORMS['add_presentation'].errors.name %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['add_presentation'].errors.link %}<span style="color: red;">{{error}}</span>{% endfor %}
+            <div class="large-4 columns">
+                <label>Week {{ADMIN_FORMS['add_presentation'].week}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Name {{ADMIN_FORMS['add_presentation'].name}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Link {{ADMIN_FORMS['add_presentation'].link}}</label>
+            </div>
+            {{ADMIN_FORMS['add_presentation'].submit(class="button", value = 'Add Presentation')}}
+        </form>
+    </div>
+</div>
+<div class="large-7 columns">
+    <h4><strong>Edit Presentation</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="edit_presentation">
+            {{ADMIN_FORMS['edit_presentation'].hidden_tag()}}
+            {% for error in ADMIN_FORMS['edit_presentation'].errors.name %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['edit_presentation'].errors.link %}<span style="color: red;">{{error}}</span>{% endfor %}
+            <div class="large-4 columns">
+                <label>Presentation {{ADMIN_FORMS['edit_presentation'].pres}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Name {{ADMIN_FORMS['edit_presentation'].name}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Link {{ADMIN_FORMS['edit_presentation'].link}}</label>
+            </div>
+            {{ADMIN_FORMS['edit_presentation'].submit(class="button", value = 'Edit Presentation')}}
+        </form>
+    </div>
+</div>
