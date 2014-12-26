@@ -202,3 +202,17 @@ class EditPresentation(Form):
         if self.link.data and not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
             return False
         return True
+
+class DeletePresentation(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER) ]
+    pres = SelectField('pres', choices=presentations, coerce=int)
+    confirm = BooleanField('confirm', widget= widgets.CheckboxInput())
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if self.confirm:
+            return True
+        return False

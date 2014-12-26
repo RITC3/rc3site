@@ -299,9 +299,20 @@ def admin():
         else:
             flash("Invalid Presentation Edit")
 
+    #presentation deleting
+    del_pres = DeletePresentation()
+    if request.form.get('submit', None) == 'Delete Presentation':
+        name = "" #not sure if I need this...
+        if edit_pres.validate_on_submit():
+            pres = Presentation.query.filter_by(id=del_pres.data['pres']).first()
+            name = "Week {} - {}".format(pres.week, pres.name)
+            db.session.delete(pres)
+            db.session.commit()
+            flash("{} deleted".format(name))
+            return redirect(url_for('admin'))
 
 
-    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres}
+    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
 @app.route('/mailinglist')

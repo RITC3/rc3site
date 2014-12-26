@@ -38,3 +38,19 @@
         </form>
     </div>
 </div>
+
+<div class="large-6 columns">
+    <h4><strong>Remove Presentation (Dangerous!)</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="delete_presentation">
+            {{ADMIN_FORMS['delete_presentation'].hidden_tag()}}
+            <div class="large-7 columns">
+                <label>Presentation {{ADMIN_FORMS['delete_presentation'].pres}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Confirm Deletion: {{ADMIN_FORMS['delete_presentation'].confirm}}</label>
+            </div>
+            {{ADMIN_FORMS['delete_presentation'].submit(class="button", value = 'Delete Presentation')}}
+        </form>
+    </div>
+</div>
