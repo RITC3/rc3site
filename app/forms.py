@@ -10,7 +10,7 @@ from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS, CURRENT_S
 def get_sorted_userlist():
     userchoices = []
     users = User.query.all()
-    users.sort(key=lambda x: x.nickname.lower())
+    users.sort(key=lambda user: user.nickname.lower())
     for user in users:
         if user.nickname == user.username:
             userchoices.append((user.id, "{0}".format(user.username)))
