@@ -203,6 +203,7 @@ def about():
 def admin():
     if not is_admin():
         return render_template('404.html', title='404'), 404
+
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
@@ -230,6 +231,7 @@ def admin():
                 db.session.commit()
                 flash('Score created!')
                 return redirect(url_for('admin'))
+
     newsletter_form = Send_Newsletter()
     if request.form.get('submit', None) == 'Send Newsletter':
         if newsletter_form.validate_on_submit():
@@ -244,6 +246,7 @@ def admin():
                     else:
                         flash("Sorry, {0} hasn't been implemented yet".format(media.data))
             return redirect(url_for('admin'))
+
     permissions = Permission_User()
     if request.form.get('submit', None) == 'Update User':
         if permissions.validate_on_submit():
@@ -260,6 +263,7 @@ def admin():
             flash(str("{0} is now {1}".format(updated_user.nickname, role)))
             #Send email alerting this happened
             return redirect(url_for('admin'))
+
     add_sub = Add_Subscriber()
     if request.form.get('submit', None) == 'Add Subscriber':
         if add_sub.validate_on_submit():
@@ -302,7 +306,6 @@ def admin():
     #presentation deleting
     del_pres = DeletePresentation()
     if request.form.get('submit', None) == 'Delete Presentation':
-        name = "" #not sure if I need this...
         if edit_pres.validate_on_submit():
             pres = Presentation.query.filter_by(id=del_pres.data['pres']).first()
             name = "Week {} - {}".format(pres.week, pres.name)
