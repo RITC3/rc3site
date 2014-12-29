@@ -219,12 +219,16 @@ class DeletePresentation(Form):
 
 """Adding a news article to newspage"""
 class AddNewsArticle(Form):
-	title = TextField('title', validators = [DataRequired()])
-	description = TextAreaField('body', validators = [Length(min = 10, max = 1000)])
-	link = TextField('site', validators = [DataRequired()])
-	date = DateField('date', validators = [DataRequired()], default = datetime.now())
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
 
-	def validate(self):
-		if not Form.validate(self):
-			return False
-		return True
+    title = TextField('title', validators = [DataRequired()])
+    description = TextAreaField('body', validators = [Length(min = 10, max = 1000)])
+    link = TextField('site', validators = [DataRequired()])
+    date = DateField('date', validators = [DataRequired()], default = datetime.now())
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if not Form.validate(self):
+            return False
+        return True
