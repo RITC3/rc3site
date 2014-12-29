@@ -153,9 +153,12 @@ class Presentation(db.Model):
 
 """Class for news"""
 class News(db.Model):
-	id = db.Column(db.Integer, primary_key = True)
-	semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
-	article = db.Column(db.String(100))
-	description = db.Column(db.String(1000))
-	link = db.Column(db.String(300))
-	timestamp = db.Column(db.DateTime)
+    id = db.Column(db.Integer, primary_key = True)
+    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
+    article = db.Column(db.String(100))
+    description = db.Column(db.String(1000))
+    link = db.Column(db.String(300))
+    timestamp = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<News Item: {}'.format(self.article)
