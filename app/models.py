@@ -150,3 +150,12 @@ class Presentation(db.Model):
 
     def __repr__(self):
         return '<Presentation Week {}: {}>'.format(self.pres_week, self.pres_name)
+
+"""Class for news"""
+class News(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
+	article = db.Column(db.String(100))
+	description = db.Column(db.String(1000))
+	link = db.Column(db.String(300))
+	timestamp = db.Column(db.DateTime)

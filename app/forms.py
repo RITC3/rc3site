@@ -216,3 +216,15 @@ class DeletePresentation(Form):
         if self.confirm:
             return True
         return False
+
+"""Adding a news article to newspage"""
+class AddNewsArticle(Form):
+	title = TextField('title', validators = [DataRequired()])
+	description = TextAreaField('body', validators = [Length(min = 10, max = 1000)])
+	link = TextField('site', validators = [DataRequired()])
+	date = DateField('date', validators = [DataRequired()], default = datetime.now())
+
+	def validate(self):
+		if not Form.validate(self):
+			return False
+		return True

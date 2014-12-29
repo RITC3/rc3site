@@ -314,6 +314,15 @@ def admin():
             flash("{} deleted".format(name))
             return redirect(url_for('admin'))
 
+    #Uploading News Article
+    upload_article = AddNewsArticle()
+    if request.form.get('submit', None) == 'Upload Article':
+	    if upload_article.validate_on_submit():
+		    article = Aritcle(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data) 
+		    db.session.add(article)
+		    db.session.commit()
+		    flash('Article Uploaded')
+		    return redirect(url_for('admin'))
 
     ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
