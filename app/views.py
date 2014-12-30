@@ -10,7 +10,7 @@ from datetime import datetime
 from flask import render_template, flash, redirect, session, url_for, request, g, abort
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, google
-from models import User, USER_ROLES, Challenge, Score, Presentation
+from models import *
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
 from config import USER_ROLES, SEMESTERS, CURRENT_SEMESTER, SEMESTERS_DICT
@@ -318,7 +318,7 @@ def admin():
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
-            article = Aritcle(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data)
+            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data)
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
