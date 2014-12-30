@@ -19,7 +19,7 @@
                     </label>
                 </div>
                 <div class="small-12 medium-8 large-8 columns"> 
-                    <label><h7>Description:*</h7> {% for error in ADMIN_FORMS['create_challenge'].errors.about %}<span style="color: red;">{{error}}</span>{% endfor %}
+                    <label><h7>Description:*</h7> {% for error in ADMIN_FORMS['upload_article'].errors.about %}<span style="color: red;">{{error}}</span>{% endfor %}
                         {{ADMIN_FORMS['upload_article'].about(cols = 32, rows = 4)}}
                     </label>
                 </div>
@@ -29,7 +29,7 @@
                 </label>
                 </div>
                 <div class="small-12 medium-6 large-12 columns">
-                    {{ADMIN_FORMS['create_challenge'].submit(class="button", value="Create Challenge")}}
+                    {{ADMIN_FORMS['upload_article'].submit(class="button", value="Upload Article")}}
                 </div>
         </form>
     </div>
