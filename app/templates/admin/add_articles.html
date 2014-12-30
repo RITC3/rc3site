@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+
+<div class="small-8 large-8 columns">
+    <h4><strong>Upload Article</strong></h4>
+        <div class="panel small-12 large-12 columns">
+            <form action="" method="POST" name="upload_aritcle">
+                {{ADMIN_FORMS['upload_article'].hidden_tag()}}
+                {% for error in ADMIN_FORMS['upload_article'].errors.name %}<span style="color: red;">{{error}}</span>{%     endfor %}
+                <div class="small-12 medium-8 large-8 columns"> 
+                    <label><h7>Article Name:*</h7>
+                        {{ADMIN_FORMS['upload_article'].name(size = 10)}}
+                    </label>
+                </div>
+                <div class="small-12 medium-8 large-8 columns"> 
+                    <label><h7>Date:*</h7>
+                        {{ADMIN_FORMS['upload_article'].name(size = 10)}}
+                    </label>
+                </div>
+                <div class="small-12 medium-8 large-8 columns"> 
+                    <label><h7>Description:*</h7> {% for error in ADMIN_FORMS['create_challenge'].errors.about %}<span style="color: red;">{{error}}</span>{% endfor %}
+                        {{ADMIN_FORMS['upload_article'].about(cols = 32, rows = 4)}}
+                    </label>
+                </div>
+                <div class="small-12 medium-8 large-8 columns"> 
+                <label><h7>Link:*</h7>
+                    {{ADMIN_FORMS['upload_article'].name(size = 10)}}
+                </label>
+                </div>
+                <div class="small-12 medium-6 large-12 columns">
+                    {{ADMIN_FORMS['create_challenge'].submit(class="button", value="Create Challenge")}}
+                </div>
+        </form>
+    </div>
+</div>
+
+
+
+
