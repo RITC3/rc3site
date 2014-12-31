@@ -145,19 +145,7 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-        return render_template('news.html', title='News') 
-
-
-
-
-#News section
-@app.route('/news')
-@login_required
-def news():
-        return render_template('news.html', title='News') 
-
-
-
+        return render_template('news.html', title='News')
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
