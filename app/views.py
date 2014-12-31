@@ -136,6 +136,8 @@ def resources():
 @login_required
 def sem_resources(semester):
     sem = Semester.query.filter_by(lname=semester).first()
+    if sem == None:
+        return render_template('404.html', title='404'), 404
     pres = [ p for p in Presentation.query.all() if p.semester.lname == semester ]
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
@@ -182,6 +184,8 @@ def scoreboard():
 @app.route('/scoreboard/<semester>')
 def sem_scoreboard(semester):
     sem = Semester.query.filter_by(lname=semester).first()
+    if sem == None:
+        return render_template('404.html', title='404'), 404
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=sem) ]
     sort_user_scores(all_users, semester=sem)
     return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=sem)
@@ -348,14 +352,21 @@ def challenges():
 
 @app.route('/challenges/<semester>')
 def sem_challenges(semester):
-    sem = Semester.query.filter_by(lname=semester).first()
-    challenges = Challenge.query.filter_by(semester_id=sem.id)
+    try:
+        sem = Semester.query.filter_by(lname=semester).first()
+        challenges = Challenge.query.filter_by(semester_id=sem.id)
+    except:
+            return render_template('404.html', title='404'), 404
     return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user, semester=sem)
 
 @app.route('/challenges/<semester>/<chall>')
 def challenge(semester, chall):
     sem = Semester.query.filter_by(lname=semester).first()
+    if sem == None:
+        return render_template('404.html', title='404'), 404
     challenge = Challenge.query.filter_by(name=chall, semester_id=sem.id).first()
+    if challenge == None:
+        return render_template('404.html', title='404'), 404
     return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user, semester=sem)
 
 @app.route('/edit_challenge/<semester>/<chall>', methods = ['GET','POST'])
