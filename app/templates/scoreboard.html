@@ -5,14 +5,14 @@
 
 <div class="small-12">
     <div class="row panel">
-    {% for semester in semesters %}
+    {% for semester in g.semesters %}
     <div class="small-3 columns ecol left">
-    <a href='/scoreboard/{{semester}}'>{{semester}}</a>
+    <a href='/scoreboard/{{semester.lname}}'>{{semester.name}}</a>
     </div>
     {% endfor %}
     </div>
 </div>
-<h2 class="text-center">{{semester}} Semester Scoreboard</h2>
+<h2 class="text-center">{{semester.name}} Semester Scoreboard</h2>
 {% include "generate_scoreboard.html" %}
  
 {% endblock %}

@@ -4,8 +4,9 @@ from wtforms import TextField, BooleanField, TextAreaField, SelectField, Integer
 from wtforms.fields import DateField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
-from app.models import User, Challenge, Presentation
-from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, SEMESTERS, CURRENT_SEMESTER
+from app.models import *
+from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES
+from semester import CURRENT_SEMESTER
 
 def get_sorted_userlist():
     userchoices = []
@@ -109,7 +110,7 @@ class Update_Score(Form):
         Form.__init__(self, *args, **kwargs)
     userchoices = get_sorted_userlist()
     challengechoices = []
-    challenges = Challenge.query.filter_by(semester_id=CURRENT_SEMESTER)
+    challenges = Challenge.query.filter_by(semester_id=CURRENT_SEMESTER.id)
     for chall in challenges:
         challengechoices.append((chall.id, chall.name))
     user = SelectField('user', choices = userchoices)
@@ -190,7 +191,7 @@ class EditPresentation(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER) ]
+    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER.id) ]
     pres = SelectField('pres', choices=presentations, coerce=int)
     name = TextField('name')
     link = TextField('link')
@@ -207,7 +208,7 @@ class DeletePresentation(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER) ]
+    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER.id) ]
     pres = SelectField('pres', choices=presentations, coerce=int)
     confirm = BooleanField('confirm', widget= widgets.CheckboxInput())
     submit = SubmitField('submit')

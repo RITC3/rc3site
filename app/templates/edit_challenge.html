@@ -32,7 +32,7 @@
  
             </div>
             <input type="submit" class="button" value="Save Changes">
-            <a href="{{ url_for('challenge', chall = challenge.name, semester=semesters[semester])}}" class="button">Back to Challenge</a>
+            <a href="{{ url_for('challenge', chall = challenge.name, semester=semester.lname)}}" class="button">Back to Challenge</a>
         </div>
     </div>
 </form>

@@ -1,7 +1,6 @@
 from app import db
 from hashlib import md5
-from config import USER_ROLES, CURRENT_SEMESTER, SEMESTERS, SEMESTERS_DICT
-from sqlalchemy import desc
+from config import USER_ROLES
 
 class User(db.Model):
     """docstring for User"""
@@ -30,18 +29,26 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.id)
 
-    def get_score(self, challenge='all', semester=SEMESTERS[CURRENT_SEMESTER]):
-        sem_id = SEMESTERS_DICT[semester]
+    '''This function should be simplified...'''
+    def get_score(self, challenge='all', semester='all'):
         total = 0
-        if challenge is 'all':
-            for s in self.scores:
-                if s.semester_id == sem_id:
-                    total += s.points
+        if semester is 'all':
+            if challenge is 'all':
+                for s in self.scores:
+                        total += s.points
+            else:
+                for s in self.scores:
+                    if s.challenge is challenge:
+                            total = s.points
         else:
-            for s in self.scores:
-                if s.challenge is challenge:
-                    if s.semester_id == sem_id:
-                        total = s.points
+            if challenge is 'all':
+                for s in self.scores:
+                    if s.semester == semester:
+                        total += s.points
+            else:
+                for s in self.scores:
+                    if s.challenge is challenge and s.semester == semester:
+                            total = s.points
         return total
 
     def last_seen_print(self):
@@ -80,6 +87,32 @@ class User(db.Model):
         except :
             return -1
 
+#Semesters
+class Semester(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20), unique = True, index = True)
+    lname = db.Column(db.String(20), index = True, unique = True)
+    current = db.Column(db.Boolean, default = True)
+
+    def __init__(self, current, name):
+        self.current = current
+        self.name = name
+        self.lname = self.name.replace(" ", "")
+
+    def __repr__(self):
+        return '<Semester: {}>'.format(self.name)
+
+    def __cmp__(self, other):
+        try:
+            if self.id == other.id:
+                return 0
+            if self.id > other.id:
+                return 1
+            if self.id < other.id:
+                return -1
+        except:
+            return -1
+
 class Post(db.Model):
     """docstring for Post"""
     id = db.Column(db.Integer, primary_key = True)
@@ -93,11 +126,12 @@ class Post(db.Model):
 class Challenge(db.Model):
     """docstring for Challenge"""
     id = db.Column(db.Integer, primary_key = True)
-    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
     name = db.Column(db.String(64), index = True, unique= True)
     about = db.Column(db.String(1000), index = True)
     date = db.Column(db.DateTime)
     scores = db.relationship('Score', backref = 'challenge', lazy = 'dynamic')
+    semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
+    semester = db.relationship("Semester")
 
     def total_users(self):
         # This is really ineffecient, but it's 2:23AM and I don't care
@@ -115,8 +149,6 @@ class Challenge(db.Model):
             users.append(user)
         return users
 
-
-
     def __repr__(self):
         return '<Challenge %r>' % (self.name)
 
@@ -126,7 +158,8 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     challenge_id = db.Column(db.Integer, db.ForeignKey('challenge.id'))
     points = db.Column(db.Integer, default = 0)
-    semester_id = db.Column(db.Integer, default=CURRENT_SEMESTER)
+    semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
+    semester = db.relationship("Semester")
 
     def __repr__(self):
         return '<Score %r : %r>' % (self.user_id, self.points)
@@ -142,11 +175,12 @@ class Score(db.Model):
 
 class Presentation(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
-    name = db.Column(db.String(100))
-    week = db.Column(db.SmallInteger)
-    link = db.Column(db.String(300))
+    name = db.Column(db.String(100), index = True)
+    week = db.Column(db.SmallInteger, index = True)
+    link = db.Column(db.String(300), index = True)
     timestamp = db.Column(db.DateTime)
+    semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
+    semester = db.relationship("Semester")
 
     def __repr__(self):
         return '<Presentation Week {}: {}>'.format(self.pres_week, self.pres_name)
@@ -154,11 +188,12 @@ class Presentation(db.Model):
 """Class for news"""
 class News(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    semester_id = db.Column(db.Integer, default = CURRENT_SEMESTER)
     title = db.Column(db.String(100))
     description = db.Column(db.String(1000))
     link = db.Column(db.String(300))
     date = db.Column(db.DateTime)
+    semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
+    semester = db.relationship("Semester")
 
     def __repr__(self):
-        return '<News Item: {}'.format(self.article)
+        return '<News Item: {}>'.format(self.article)

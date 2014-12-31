@@ -13,11 +13,12 @@ from app import app, db, lm, google
 from models import *
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
-from config import USER_ROLES, SEMESTERS, CURRENT_SEMESTER, SEMESTERS_DICT
+from config import USER_ROLES
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
     from forms import *
+    from semester import CURRENT_SEMESTER, SEMESTERS
 
 def is_admin():
     if g.user.role == 1:
@@ -25,10 +26,20 @@ def is_admin():
     else:
         return False
 
+def sort_user_scores(l, semester):
+    for i in xrange(1, len(l)):
+        j = i-1
+        key = l[i]
+        while (l[j].get_score(semester=semester) < key.get_score(semester=semester)) and (j >= 0):
+           l[j+1] = l[j]
+           j -= 1
+        l[j+1] = key
 
 @app.before_request
 def before_request():
     g.user = current_user
+    g.semester = CURRENT_SEMESTER
+    g.semesters = SEMESTERS
     if g.user.is_authenticated():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
@@ -44,9 +55,9 @@ def index():
 
     #only show the user if they are an admin
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
-    topusers = sorted(all_users, reverse=True)
+    sort_user_scores(all_users, semester=CURRENT_SEMESTER)
 
-    return render_template("index.html", title='Home', user=usern, topusers=topusers[:5])
+    return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=CURRENT_SEMESTER)
 
 @lm.user_loader
 def load_user(id):
@@ -114,18 +125,19 @@ def user(username):
         flash('User not found.')
         abort(404)
 
-    return render_template('user.html', title=user.nickname, user=user, semester=SEMESTERS[CURRENT_SEMESTER], semesters=SEMESTERS)
+    return render_template('user.html', title=user.nickname, user=user)
 
 @app.route('/resources')
 @login_required
 def resources():
-    return redirect('/resources/{}'.format(SEMESTERS[CURRENT_SEMESTER]))
+    return redirect('/resources/{}'.format(CURRENT_SEMESTER.lname))
 
 @app.route('/resources/<semester>')
 @login_required
 def sem_resources(semester):
-    pres = [ p for p in Presentation.query.all() if p.semester_id == SEMESTERS_DICT[semester] ]
-    return render_template('resources.html', title='Resources', pres_list=pres, semester=semester, semesters=SEMESTERS)
+    sem = Semester.query.filter_by(lname=semester).first()
+    pres = [ p for p in Presentation.query.all() if p.semester.lname == semester ]
+    return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -165,22 +177,15 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    return redirect("/scoreboard/{}".format(SEMESTERS[CURRENT_SEMESTER]))
+    return redirect("/scoreboard/{}".format(CURRENT_SEMESTER.lname))
 
 @app.route('/scoreboard/<semester>')
 def sem_scoreboard(semester):
-    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=semester) ]
-    sort_user_scores(all_users, semester)
-    return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=semester, semesters=SEMESTERS)
+    sem = Semester.query.filter_by(lname=semester).first()
+    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=sem) ]
+    sort_user_scores(all_users, semester=sem)
+    return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=sem)
 
-def sort_user_scores(l, semester):
-    for i in xrange(1, len(l)):
-        j = i-1
-        key = l[i]
-        while (l[j].get_score(semester=semester) < key.get_score(semester=semester)) and (j >= 0):
-           l[j+1] = l[j]
-           j -= 1
-        l[j+1] = key
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -207,7 +212,7 @@ def admin():
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
-            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data)
+            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=CURRENT_SEMESTER.id)
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
@@ -277,7 +282,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=CURRENT_SEMESTER.id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
@@ -318,7 +323,7 @@ def admin():
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
-            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data)
+            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=CURRENT_SEMESTER.id)
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
@@ -339,24 +344,27 @@ def mailinglist():
 
 @app.route('/challenges')
 def challenges():
-    return redirect('/challenges/{}'.format(SEMESTERS[CURRENT_SEMESTER]))
+    return redirect('/challenges/{}'.format(CURRENT_SEMESTER.lname))
 
 @app.route('/challenges/<semester>')
 def sem_challenges(semester):
-    challenges = Challenge.query.filter_by(semester_id=SEMESTERS_DICT[semester])
-    return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user, semester=semester, semesters=SEMESTERS)
+    sem = Semester.query.filter_by(lname=semester).first()
+    challenges = Challenge.query.filter_by(semester_id=sem.id)
+    return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user, semester=sem)
 
 @app.route('/challenges/<semester>/<chall>')
 def challenge(semester, chall):
-    challenge = Challenge.query.filter_by(name=chall, semester_id=SEMESTERS_DICT[semester]).first()
-    return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user, semester=semester, semesters=SEMESTERS_DICT)
+    sem = Semester.query.filter_by(lname=semester).first()
+    challenge = Challenge.query.filter_by(name=chall, semester_id=sem.id).first()
+    return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user, semester=sem)
 
 @app.route('/edit_challenge/<semester>/<chall>', methods = ['GET','POST'])
 @login_required
 def edit_challenge(semester, chall):
-    #if not is_admin():
-    #    return render_template('404.html', title='404'), 404
-    challenge = Challenge.query.filter_by(name=chall, semester_id=SEMESTERS_DICT[semester]).first()
+    if not is_admin():
+        return render_template('404.html', title='404'), 404
+    sem = Semester.query.filter_by(lname=semester).first()
+    challenge = Challenge.query.filter_by(name=chall, semester_id=sem.id).first()
     form = Edit_Challenge(challenge.name)
     if form.validate_on_submit():
         challenge.name = form.name.data
@@ -365,12 +373,12 @@ def edit_challenge(semester, chall):
         db.session.add(challenge)
         db.session.commit()
         flash('Your changes have been saved!')
-        return redirect(url_for('challenge', chall = form.name.data, semester=semester ))
+        return redirect(url_for('challenge', chall = form.name.data, semester=sem ))
     else:
         form.name.data = challenge.name
         form.about.data = challenge.about
         form.date.data = challenge.date
-    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester_id, semesters=SEMESTERS)
+    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester)
 
 @app.route('/unsubscribe')
 @login_required

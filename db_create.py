@@ -3,7 +3,7 @@ from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
 from config import SQLALCHEMY_MIGRATE_REPO
 from app import db
-from app.models import User
+from app.models import User, Semester
 from config import BASE_ADMINS, USER_ROLES
 import os.path
 import sys
@@ -39,4 +39,10 @@ for admin in BASE_ADMINS:
         newsletter = 1,
         about_me = ""
     ))
+sems = ['Fall 2014', 'Spring 2015']
+current = False
+for sem in sems:
+    if sem == sems[len(sems)-1]:
+        current = True
+    db.session.add(Semester(name=sem, current=current))
     db.session.commit()

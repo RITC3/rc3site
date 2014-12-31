@@ -9,7 +9,7 @@
                     <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
                     <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
                     {% if challenge %}
-                        <td>{{user.get_score(challenge=challenge, semester=semester)}}</td>
+                        <td>{{user.get_score(challenge=challenge, semester=challenge.semester)}}</td>
                     {% else %}
                         <td>{{user.get_score(semester=semester)}}</td>
                     {% endif %}
