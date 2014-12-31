@@ -33,18 +33,18 @@
     <body>
         <nav class="top-bar" data-topbar >
  
-                <ul class="title-area">
+            <ul class="title-area">
 
-                    <li class="name">
-                        <h1>
+                <li class="name">
+                    <h1>
 
-                        <a href="{{ url_for('index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
+                    <a href="{{ url_for('index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
 
-                        </h1>
+                    </h1>
 
-                    </li>
+                </li>
 
-                </ul>
+            </ul>
 
             <section class="top-bar-section">
 
@@ -57,7 +57,7 @@
                         <ul id="hoversb" class="f-dropdown" data-dropdown-content>
                         {% for semester in g.semesters %}
 
-                            <li class="column"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
+                            <li class="row"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
 
                         {% endfor %}
                         </ul>
@@ -67,7 +67,7 @@
                         <ul id="hoverchal" class="f-dropdown columns" data-dropdown-content>
                         {% for semester in g.semesters %}
 
-                            <li class="column"><a href="{{ url_for('sem_challenges', semester=semester.lname)}}">{{semester.name}}</a></li>
+                            <li class="row"><a href="{{ url_for('sem_challenges', semester=semester.lname)}}">{{semester.name}}</a></li>
 
                         {% endfor %}
                         </ul>
@@ -88,7 +88,7 @@
                             <ul id="hoverres" class="f-dropdown" data-dropdown-content>
                         {% for semester in g.semesters %}
 
-                            <li class="column"><a href="{{ url_for('sem_resources', semester=semester.lname)}}">{{semester.name}}</a></li>
+                            <li class="row"><a href="{{ url_for('sem_resources', semester=semester.lname)}}">{{semester.name}}</a></li>
 
                         {% endfor %}
                         </ul>
