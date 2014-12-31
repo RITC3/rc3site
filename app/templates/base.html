@@ -46,59 +46,70 @@
 
                 </ul>
 
-                <section class="top-bar-section">
+            <section class="top-bar-section">
 
-                    <ul class="left">
+                <ul class="left">
 
-                        <li class="divider"></li>
+                    <li class="divider"></li>
                         <li><a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a></li>
-                        <li class="divider"></li>
-                        <li class="has-dropdown" data-dropdown="hoversb" data-options="is_hover:true"><a href="{{ url_for('scoreboard') }}"><i class="fa fa-table"></i> Scoreboard</a>                        <ul id="hoversb" class="f-dropdown" data-dropdown-content>
+                    <li class="divider"></li>
+                    <li class="has-dropdown" data-dropdown="hoversb" data-options="is_hover:true"><a href="{{ url_for('scoreboard') }}"><i class="fa fa-table"></i> Scoreboard</a>
+                        <ul id="hoversb" class="f-dropdown" data-dropdown-content>
                         {% for semester in g.semesters %}
-                        <li class="column"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
+
+                            <li class="column"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
+
                         {% endfor %}
-                        </ul></li>
-                        <li class="divider"></li>
-                        <li class="has-dropdown" data-dropdown="hoverchal" data-options="is_hover:true"><a href="{{ url_for('challenges') }}"><i class="fa fa-globe"></i> Challenges</a>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown" data-dropdown="hoverchal" data-options="is_hover:true"><a href="{{ url_for('challenges') }}"><i class="fa fa-globe"></i> Challenges</a>
                         <ul id="hoverchal" class="f-dropdown columns" data-dropdown-content>
                         {% for semester in g.semesters %}
-                        <li class="column"><a href="{{ url_for('sem_challenges', semester=semester.lname)}}">{{semester.name}}</a></li>
+
+                            <li class="column"><a href="{{ url_for('sem_challenges', semester=semester.lname)}}">{{semester.name}}</a></li>
+
                         {% endfor %}
-                        </ul></li>
+                        </ul>
+                    </li>
 
+                    <li class="divider"></li>
+                    {% if g.user.is_authenticated() %}
+
+                        <li><a href="{{ url_for('user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
-                        {% if g.user.is_authenticated() %}
+                        {% if g.user.role %}
 
-                            <li><a href="{{ url_for('user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a href="{{ url_for('admin') }}"><i class="fa fi-wrench"></i> Admin</a></li>
                             <li class="divider"></li>
-                            {% if g.user.role %}
-
-                                <li><a href="{{ url_for('admin') }}"><i class="fa fi-wrench"></i> Admin</a></li>
-                                <li class="divider"></li>
-                            {% endif %}
-                            <li class="has-dropdown" data-dropdown="hoverres" data-options="is_hover:true"><a href="{{ url_for('resources') }}"><i class="fa fi-page-multiple"></i> Resources</a>                        <ul id="hoverres" class="f-dropdown" data-dropdown-content>
-                        {% for semester in g.semesters %}
-                        <li class="column"><a href="{{ url_for('sem_resources', semester=semester.lname)}}">{{semester.name}}</a></li>
-                        {% endfor %}
-                        </ul></li>
-
-                        <li class="divider"></li>
-                            <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
-
-                        {% else %}
-
-                            <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
 
                         {% endif %}
+                        <li class="has-dropdown" data-dropdown="hoverres" data-options="is_hover:true"><a href="{{ url_for('resources') }}"><i class="fa fi-page-multiple"></i> Resources</a>
+                            <ul id="hoverres" class="f-dropdown" data-dropdown-content>
+                        {% for semester in g.semesters %}
 
-                        <li class="divider"></li>
-                        <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
-                        <li class="divider"></li>
-                        
+                            <li class="column"><a href="{{ url_for('sem_resources', semester=semester.lname)}}">{{semester.name}}</a></li>
 
-                    </ul>
+                        {% endfor %}
+                        </ul>
+                    </li>
 
-                </section>
+                    <li class="divider"></li>
+                        <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+
+                    {% else %}
+
+                        <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
+
+                    {% endif %}
+
+                    <li class="divider"></li>
+                    <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
+                    <li class="divider"></li>
+
+                </ul>
+
+            </section>
         </nav>
  
         <div class="row">
