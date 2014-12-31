@@ -141,6 +141,15 @@ def sem_resources(semester):
     pres = [ p for p in Presentation.query.all() if p.semester.lname == semester ]
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
+#News section
+@app.route('/news')
+@login_required
+def news():
+        return render_template('news.html', title='News') 
+
+
+
+
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
