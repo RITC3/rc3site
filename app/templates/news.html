@@ -18,17 +18,22 @@
 <div class="small-15 columns left">
     <h3>News</h3>
     <p>In this section we will frequestnly post news artibles relevent to security.</p>
-    <div class="panel">
-        <table>
-            <td>
-                <table>
-                    <td><h10>1</td></h10>
-                        <td><pre><t>TITLE</t>
-<d>DATE</d>
-<desc>DESC</desc></td>
-                </table>
-             </td>
-    </div>
- </div>
- </div>
+    {% if articles %}
+    {% for art in articles %}
+        <div class="panel">
+            <table>
+                <td>
+                    <table>
+                        <td><h10>{{art.id}}</td></h10>
+                        <td><t><a href="{{art.link}}">{{art.title}}</a></t><pre>
+<d>{{art.date}}</d>
+<desc>{{art.description}}</desc></td>
+                    </table>
+                </td>
+            </table>
+        </div>
+</div>
+</div>
+{% endfor %}
+{% endif %}
 {% endblock %}

@@ -145,9 +145,9 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-    return render_template('news.html', title='News')
+    art = [ n for n in News.query.all() ]  
+    return render_template('news.html', title='News', articles=art)
 
-    
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -332,7 +332,7 @@ def admin():
             flash("{} deleted".format(name))
             return redirect(url_for('admin'))
 
-    #Uploading News Article
+    #Uploading news article
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
