@@ -55,9 +55,9 @@ def index():
 
     #only show the user if they are an admin
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
-    sort_user_scores(all_users, semester=CURRENT_SEMESTER)
+    sort_user_scores(all_users, semester=g.semester)
 
-    return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=CURRENT_SEMESTER)
+    return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=g.semester)
 
 @lm.user_loader
 def load_user(id):
@@ -130,7 +130,7 @@ def user(username):
 @app.route('/resources')
 @login_required
 def resources():
-    return redirect(url_for('sem_resources', semester=CURRENT_SEMESTER.lname))
+    return redirect(url_for('sem_resources', semester=g.semester.lname))
 
 @app.route('/resources/<semester>')
 @login_required
@@ -179,7 +179,7 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    return redirect(url_for("sem_scoreboard", semester=CURRENT_SEMESTER.lname))
+    return redirect(url_for("sem_scoreboard", semester=g.semester.lname))
 
 @app.route('/scoreboard/<semester>')
 def sem_scoreboard(semester):
@@ -216,7 +216,7 @@ def admin():
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
-            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=CURRENT_SEMESTER.id)
+            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=g.semester.id)
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
@@ -286,7 +286,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=CURRENT_SEMESTER.id)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=g.semester.id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
@@ -327,7 +327,7 @@ def admin():
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
-            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=CURRENT_SEMESTER.id)
+            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=g.semester.id)
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
@@ -348,7 +348,7 @@ def mailinglist():
 
 @app.route('/challenges')
 def challenges():
-    return redirect(url_for('sem_challenges', semester=CURRENT_SEMESTER.lname))
+    return redirect(url_for('sem_challenges', semester=g.semester.lname))
 
 @app.route('/challenges/<semester>')
 def sem_challenges(semester):
