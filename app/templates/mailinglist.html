@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center">Mailing List</h2>
+<div class="small-12">
+
+    <table>
+
+        <tbody>
+            {% if mlist %}
+            {% for user in mlist %}
+                <tr valign="center">
+                    <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
+                    <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
+                    <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
