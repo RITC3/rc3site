@@ -10,8 +10,10 @@
                     <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
                     {% if challenge %}
                         <td>{{user.get_score(challenge=challenge, semester=challenge.semester)}}</td>
-                    {% else %}
+                    {% elif semester %}
                         <td>{{user.get_score(semester=semester)}}</td>
+                    {% else %}
+                        <td>{{user.get_score()}}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
