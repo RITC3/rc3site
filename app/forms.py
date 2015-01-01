@@ -6,7 +6,8 @@ from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
 from app.models import *
 from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES
-from semester import CURRENT_SEMESTER
+
+CURRENT_SEMESTER = Semester.query.filter_by(current=True).first()
 
 def get_sorted_userlist():
     userchoices = []

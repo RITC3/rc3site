@@ -2,16 +2,12 @@
 
 {% block content %}
 
-<div class="small-12">
-    <div class="row panel">
-    {% for semester in g.semesters %}
-    <div class="small-3 columns ecol left">
-    <a href='/challenges/{{semester.lname}}'>{{semester.name}}</a>
-    </div>
-    {% endfor %}
-    </div>
-</div>
 <h2 class="text-center">{{semester.name}} Challenges</h2>
+
+{% if not challenges.count() %}
+<h4 class="text-center">Nothing here yet. Check back soon!</h4>
+{% endif %}
+
 <div class="small-12 columns">
 {% set i = 0 %}
 {% for challenge in challenges %}

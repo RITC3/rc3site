@@ -1,16 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="small-12">
-    <div class="row panel">
-    {% for semester in g.semesters %}
-    <div class="small-3 columns ecol left">
-    <a href='/resources/{{semester.lname}}'>{{semester.name}}</a>
-    </div>
-    {% endfor %}
-    </div>
-</div>
 <h2 class="text-center">{{semester.name}} Resources</h2>
+
+{% if not pres_list %}
+<h4 class="text-center">Nothing here yet. Check back soon!</h4>
+{% endif %}
 
 {% if pres_list %}
 {% for pres in pres_list %}
