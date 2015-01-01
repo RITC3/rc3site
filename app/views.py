@@ -130,7 +130,7 @@ def user(username):
 @app.route('/resources')
 @login_required
 def resources():
-    return redirect('/resources/{}'.format(CURRENT_SEMESTER.lname))
+    return redirect(url_for('sem_resources', semester=CURRENT_SEMESTER.lname))
 
 @app.route('/resources/<semester>')
 @login_required
@@ -179,7 +179,7 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    return redirect("/scoreboard/{}".format(CURRENT_SEMESTER.lname))
+    return redirect(url_for("sem_scoreboard", semester=CURRENT_SEMESTER.lname))
 
 @app.route('/scoreboard/<semester>')
 def sem_scoreboard(semester):
@@ -348,7 +348,7 @@ def mailinglist():
 
 @app.route('/challenges')
 def challenges():
-    return redirect('/challenges/{}'.format(CURRENT_SEMESTER.lname))
+    return redirect(url_for('sem_challenges', semester=CURRENT_SEMESTER.lname))
 
 @app.route('/challenges/<semester>')
 def sem_challenges(semester):
