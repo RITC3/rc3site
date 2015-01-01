@@ -1,0 +1,14 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+ 
+{% block content %}
+
+<h2 class="text-center">Hall of Fame Scoreboard</h2>
+<h4 class="text-center">Top all-time scores (cross semesters)</h4>
+{% if not users %}
+<h4 class="text-center">Nothing here yet. Check back soon!</h4>
+{% endif %}
+{% include "generate_scoreboard.html" %}
+ 
+{% endblock %}
+

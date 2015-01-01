@@ -189,6 +189,11 @@ def sem_scoreboard(semester):
     sort_user_scores(all_users, semester=sem)
     return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=sem)
 
+@app.route('/halloffame')
+def halloffame():
+    users = [ user for user in User.query.all() if user.get_score() ]
+    users = sorted(users, reverse=True)
+    return render_template('halloffame.html', users=users[:10])
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
