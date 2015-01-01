@@ -145,7 +145,9 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-        return render_template('news.html', title='News')
+    return render_template('news.html', title='News')
+
+    
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
@@ -212,6 +214,7 @@ def contact():
 @app.route('/about')
 def about():
     return render_template('about.html', title='About')
+
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
