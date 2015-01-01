@@ -27,7 +27,10 @@
                 <h3> {{user.nickname}}<em class="text-small"> [ {{user.username}} ]</em></h3>
             </div>
             <div class="small-12 columns">
-            {% if user.get_score(semester=semester) %}<span class="score"> {{user.get_score(semester=semester)}} Points</span>{% endif %}    
+                {% if user.get_score(semester=semester) %}<span class="score"> {{user.get_score(semester=semester)}} Points</span>{% endif %}
+            </div>
+            <div class="small-12 columns">
+            {% if user.get_score() %}<span class="score"> {{user.get_score()}} Overall</span>{% endif %}
             </div>
 
             <div class="small-12 columns">
