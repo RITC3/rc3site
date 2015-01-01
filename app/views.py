@@ -18,7 +18,6 @@ import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
     from forms import *
-    from semester import CURRENT_SEMESTER, SEMESTERS
 
 def is_admin():
     if g.user.role == 1:
@@ -38,8 +37,8 @@ def sort_user_scores(l, semester):
 @app.before_request
 def before_request():
     g.user = current_user
-    g.semester = CURRENT_SEMESTER
-    g.semesters = SEMESTERS
+    g.semester = Semester.query.filter_by(current=True).first()
+    g.semesters = Semester.query.all()
     if g.user.is_authenticated():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
