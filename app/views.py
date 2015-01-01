@@ -337,13 +337,11 @@ def admin():
 
 @app.route('/mailinglist')
 def mailinglist():
-    #if not is_admin():
-    #    return render_template("404.html", title="Nope"), 404
-    #else:
-    #mlist = User.query.filter_by(newsletter=1)
-    #return mlist
-    return render_template("404.html", title="Nope"), 404
-
+    if not is_admin():
+        return render_template("404.html", title="Nope"), 404
+    else:
+        mlist = User.query.filter_by(newsletter=1)
+        return render_template("mailinglist.html", mlist=mlist)
 
 @app.route('/challenges')
 def challenges():
