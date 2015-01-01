@@ -383,12 +383,12 @@ def edit_challenge(semester, chall):
         db.session.add(challenge)
         db.session.commit()
         flash('Your changes have been saved!')
-        return redirect(url_for('challenge', chall = form.name.data, semester=sem ))
+        return redirect(url_for('challenge', chall = form.name.data, semester=sem.lname ))
     else:
         form.name.data = challenge.name
         form.about.data = challenge.about
         form.date.data = challenge.date
-    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge, semester=challenge.semester)
+    return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge)
 
 @app.route('/unsubscribe')
 @login_required
