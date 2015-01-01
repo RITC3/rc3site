@@ -26,72 +26,92 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-54644206-1', 'auto');
+ga('create', 'UA-54644206-2', 'auto');
     ga('send', 'pageview'); </script> <!-- I'm sorry, they just make  it so easy ;_; -->
     </head>
  
     <body>
         <nav class="top-bar" data-topbar >
  
-            <div class="row">
- 
-                    <div class="small-12">
- 
-                    <ul class="title-area">
- 
-                        <li class="name">
-                            
-                            <h1>
- 
-                                
-                            <a href="{{ url_for('index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
- 
-                            </h1>
- 
-                        </li>
- 
-                    </ul>
- 
-                    <section class="top-bar-section">
-                        
-                        <ul class="left">
- 
-                            <li><a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a></li>
- 
-                            <li><a href="{{ url_for('scoreboard') }}"><i class="fa fa-table"></i> Scoreboard</a></li>
-                            
-                            <li><a href="{{ url_for('challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
+            <ul class="title-area">
 
-                            {% if g.user.is_authenticated() %}
- 
-                                <li><a href="{{ url_for('user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
-                                {% if g.user.role %}
+                <li class="name">
+                    <h1>
 
-                                     <li><a href="{{ url_for('admin') }}"><i class="fa fi-wrench"></i> Admin</a></li>
+                    <a href="{{ url_for('index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
 
-                                {% endif %}
-                                <li><a href="{{ url_for('resources') }}"><i class="fa fi-page-multiple"></i> Resources</a></li>
-                                <li><a href="{{ url_for('news') }}"><i class ="fa fa-newspaper-o"></i> News</a></li>
-                                <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
- 
-                            {% else %}
- 
-                                <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
- 
-                            {% endif %}
- 
-                            <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
- 
-                            
- 
+                    </h1>
+
+                </li>
+
+            </ul>
+
+            <section class="top-bar-section">
+
+                <ul class="left">
+
+                    <li class="divider"></li>
+                        <li><a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a></li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown" data-dropdown="hoversb" data-options="is_hover:true"><a href="{{ url_for('scoreboard') }}"><i class="fa fa-table"></i> Scoreboard</a>
+                        <ul id="hoversb" class="f-dropdown" data-dropdown-content>
+                        {% for semester in g.semesters %}
+
+                            <li class="row"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
+
+                        {% endfor %}
                         </ul>
- 
-                    </section>
- 
-                </div>
- 
-            </div>
- 
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown" data-dropdown="hoverchal" data-options="is_hover:true"><a href="{{ url_for('challenges') }}"><i class="fa fa-globe"></i> Challenges</a>
+                        <ul id="hoverchal" class="f-dropdown columns" data-dropdown-content>
+                        {% for semester in g.semesters %}
+
+                            <li class="row"><a href="{{ url_for('sem_challenges', semester=semester.lname)}}">{{semester.name}}</a></li>
+
+                        {% endfor %}
+                        </ul>
+                    </li>
+
+                    <li class="divider"></li>
+                    <li><a href="{{ url_for('news') }}"><i class="fa fa-newspaper-o"></i> News</a></li>
+                    <li class="divider"></li>
+                    {% if g.user.is_authenticated() %}
+
+                        <li><a href="{{ url_for('user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
+                        <li class="divider"></li>
+                        {% if g.user.role %}
+
+                            <li><a href="{{ url_for('admin') }}"><i class="fa fi-wrench"></i> Admin</a></li>
+                            <li class="divider"></li>
+
+                        {% endif %}
+                        <li class="has-dropdown" data-dropdown="hoverres" data-options="is_hover:true"><a href="{{ url_for('resources') }}"><i class="fa fi-page-multiple"></i> Resources</a>
+                            <ul id="hoverres" class="f-dropdown" data-dropdown-content>
+                        {% for semester in g.semesters %}
+
+                            <li class="row"><a href="{{ url_for('sem_resources', semester=semester.lname)}}">{{semester.name}}</a></li>
+
+                        {% endfor %}
+                        </ul>
+                    </li>
+
+                    <li class="divider"></li>
+                        <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
+
+                    {% else %}
+
+                        <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
+
+                    {% endif %}
+
+                    <li class="divider"></li>
+                    <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
+                    <li class="divider"></li>
+
+                </ul>
+
+            </section>
         </nav>
  
         <div class="row">
