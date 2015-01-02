@@ -228,12 +228,12 @@ class AddNewsArticle(Form):
     description = TextAreaField('body', validators = [Length(min = 10, max = 1000)])
     link = TextField('site', validators = [DataRequired()])
     date = DateField('date', validators = [DataRequired()])
-    if re.match('[0-9]{2}-[0-9]{2}-[0-9]{4}', <some string to resemble the date field in this form.>):
-        print "wodrks"
 
     submit = SubmitField('submit')
 
     def validate(self):
         if not Form.validate(self):
+            return False
+        if self.date.data and not re.search('[0-9]{2}-[0-9]{2}-[0-9]{4}', self.date.data):
             return False
         return True
