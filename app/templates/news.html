@@ -3,18 +3,23 @@
 
 <h3><strong>News</strong></h3>
 
-<div class="small-12 columns">
+<div class="small-12">
+<table>
+    <tbody>
     {% if articles %}
     {% for art in articles %}
-        <div class="row panel">
-            <div class="small-1 medium-1 columns"><h2>{{art.id}}</h2></div>
-            <div class="small-11 medium-11 columns">
-                <a href="{{art.link}}">{{art.title}}</a>
+        <tr valign="top">
+            <td><h2><div class="small-1 medium-1 columns">{{art.id}}</div></h2></td>
+            <td><div class="small-12 medium-12 columns">
+                    <h4><a href="{{art.link}}">{{art.title}}</a></h4>
                 <p>{{art.date}}</p>
-                <pre>{{art.description}}</pre>
+                <div class="about-info"><pre>{{art.description}}</pre></div>
             </div>
-        </div>
+        </td>
+        </tr>
     {% endfor %}
     {% endif %}
+    </tbody>
+</table>
 </div>
 {% endblock %}
