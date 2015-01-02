@@ -411,6 +411,10 @@ def subscribe():
     flash("You've been subscribed. To unsubscribe, go to your profile and choose Edit")
     return redirect(url_for('index'))
 
+@app.route('/signin')
+def signin():
+    return redirect("http://goo.gl/forms/HsWUUBg4dW", code=302)
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html', title='404'), 404
