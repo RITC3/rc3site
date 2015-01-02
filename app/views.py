@@ -127,27 +127,6 @@ def user(username):
 
     return render_template('user.html', title=user.nickname, user=user)
 
-#Articles on Articles (extra pages for 25+ articles)
-@app.route('news/<number>')
-@login_required
-    def news_hist(number):
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/resources')
 @login_required
 def resources():
@@ -166,9 +145,19 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-    art = [ n for n in News.query.order_by(desc('id')) ]
-    return render_template('news.html', title='News', articles=art)
+    return redirect(url_for('news_hist', num=1))
 
+#Articles on Articles (extra pages for 25+ articles)
+@app.route('/news/<num>')
+@login_required
+def news_hist(num):
+    num = int(num)-1
+    arts_per_page = 2
+    art = News.query.order_by(desc('id'))[(num*arts_per_page):arts_per_page*(num+1)]
+    if not art or art is None:
+        return render_template('404.html', title='404'), 404
+    else:
+        return render_template('news.html', title='News', articles=art, num=num)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
