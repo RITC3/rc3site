@@ -5,14 +5,12 @@
     <style>
         h10 { color:black; font-size:200%; }
         t { color:blue; font-size:175%; }
-        d { color:gray; font-size:100%;}
-        desc { color:black; font-size:125% } 
+        d { color:gray; font-size:75%;}
+        desc { color:black; font-size:100% } 
+        table { table-layout:fixed;}
+        table td { width:100px; word-wrap:break-word;}
     </style>
 </head>
-
-
-
-
 
 <div class="row">
 <div class="small-15 columns left">
@@ -20,20 +18,16 @@
     <p>In this section we will frequestnly post news artibles relevent to security.</p>
     {% if articles %}
     {% for art in articles %}
-        <div class="panel">
+    <div class="panel" style="width: 1050px"> <!--This is the grey panel, keep this one -->
             <table>
-                <td>
-                    <!--                   <table> -->
                         <td><h10>{{art.id}}</td></h10>
                         <td><t><a href="{{art.link}}">{{art.title}}</a></t><pre>
 <d>{{art.date}}</d>
 <desc>{{art.description}}</desc></td>
-                    <!-- </table> -->
-                </td>
-            </table>
         </div>
 </div>
 </div>
 {% endfor %}
 {% endif %}
+</table>
 {% endblock %}

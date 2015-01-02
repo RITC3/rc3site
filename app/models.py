@@ -191,7 +191,7 @@ class News(db.Model):
     title = db.Column(db.String(100))
     description = db.Column(db.String(1000))
     link = db.Column(db.String(300))
-    date = db.Column(db.String(10))
+    date = db.Column(db.Date)
     semester_id = db.Column(db.Integer, db.ForeignKey('semester.id'))
     semester = db.relationship("Semester")
 
