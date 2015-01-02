@@ -144,7 +144,7 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-    art = [ n for n in News.query.all() ]  
+    art = [ n for n in News.query.all() ]
     return render_template('news.html', title='News', articles=art)
 
 
@@ -345,6 +345,8 @@ def admin():
             db.session.commit()
             flash('Article Uploaded')
             return redirect(url_for('admin'))
+        else:
+            flash('Article not uploaded')
 
     ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres, 'upload_article':upload_article}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
