@@ -239,7 +239,6 @@ def admin():
     #update_score.choices = [(c.id, c.name) for c in Challenge.query.order_by('date')] query shit right at some point
     if request.form.get('submit', None) == 'Update Score':
         if update_score.validate_on_submit():
-            semester_id = Challenge.query.filter_by(id=update_score.data['challenge']).first().semester_id
             existing_score = Score.query.filter_by(user_id=update_score.data['user'], challenge_id=update_score.data['challenge']).first()
             if existing_score:
                 existing_score.points = update_score['points'].data
@@ -248,6 +247,7 @@ def admin():
                 flash('Score updated!')
                 return redirect(url_for('admin'))
             else:
+                semester_id = Challenge.query.filter_by(id=update_score.data['challenge']).first().semester_id
                 new_score = Score(user_id=update_score.data['user'], challenge_id=update_score.data['challenge'], points=update_score.data['points'], semester_id=semester_id)
                 db.session.add(new_score)
                 db.session.commit()
