@@ -1,34 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
-<head>
-    <style>
-        h10 { color:black; font-size:200%; }
-        t { color:blue; font-size:175%; }
-        d { color:gray; font-size:75%;}
-        desc { color:black; font-size:100% } 
-        table { table-layout:fixed;}
-        table td { width:100px; word-wrap:break-word;}
-    </style>
-</head>
-
 <h3><strong>News</strong></h3>
 
-<div class="panel" style="width: 1050px"> <!--This is the grey panel, keep this one -->
-    <table>
-    </tbody>
-
-{% if articles %}
-{% for art in articles %}
-<tr valign="small-12">
-    <td class="small-1 medium-1 left"><h10>{{art.id}}</td></h10>
-    <td class="small-6 medium-6 left"><t><a href="{{art.link}}">{{art.title}}</a></t><pre>
-<d>{{art.date}}</d>
-<desc>{{art.description}}</desc></td>
+<div class="small-12 columns">
+    {% if articles %}
+    {% for art in articles %}
+        <div class="row panel">
+            <div class="small-1 medium-1 columns"><h2>{{art.id}}</h2></div>
+            <div class="small-11 medium-11 columns">
+                <a href="{{art.link}}">{{art.title}}</a>
+                <p>{{art.date}}</p>
+                <pre>{{art.description}}</pre>
+            </div>
         </div>
-</tr>
-{% endfor %}
-{% endif %}
-    </tbody>
-</table>
+    {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
