@@ -20,9 +20,9 @@
 
 {% if articles %}
 {% for art in articles %}
-<tr valign="center"> 
-    <td><h10>{{art.id}}</td></h10>
-    <td><t><a href="{{art.link}}">{{art.title}}</a></t><pre>
+<tr valign="small-12">
+    <td class="small-1 medium-1 left"><h10>{{art.id}}</td></h10>
+    <td class="small-6 medium-6 left"><t><a href="{{art.link}}">{{art.title}}</a></t><pre>
 <d>{{art.date}}</d>
 <desc>{{art.description}}</desc></td>
         </div>
