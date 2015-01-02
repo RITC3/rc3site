@@ -227,7 +227,10 @@ class AddNewsArticle(Form):
     title = TextField('title', validators = [DataRequired()])
     description = TextAreaField('body', validators = [Length(min = 10, max = 1000)])
     link = TextField('site', validators = [DataRequired()])
-    date = DateField('date', validators = [DataRequired()], default = datetime.now())
+    date = DateField('date', validators = [DataRequired()])
+    if re.match('[0-9]{2}-[0-9]{2}-[0-9]{4}', <some string to resemble the date field in this form.>):
+        print "wodrks"
+
     submit = SubmitField('submit')
 
     def validate(self):
