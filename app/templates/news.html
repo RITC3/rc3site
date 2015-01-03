@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+<h2 align="text-center">News</h2>
+
 <div class="small-12">
 <table>
     <tbody>
@@ -19,4 +21,5 @@
     </tbody>
 </table>
 </div>
+{% if more %}<p align="text-left"><a href="{{url_for('news_hist', num=num+1)}}">&lt;&lt; Older Articles</a></p>{% endif %}
 {% endblock %}

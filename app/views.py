@@ -152,12 +152,16 @@ def news():
 @login_required
 def news_hist(num):
     num = int(num)-1
-    arts_per_page = 2
-    art = News.query.order_by(desc('id'))[(num*arts_per_page):arts_per_page*(num+1)]
+    arts_per_page = 25
+    more = True
+    art = News.query.order_by(desc('id'))
+    if len(art[(num*arts_per_page):]) <= arts_per_page:
+        more = False
+    art = art[(num*arts_per_page):arts_per_page*(num+1)]
     if not art or art is None:
         return render_template('404.html', title='404'), 404
     else:
-        return render_template('news.html', title='News', articles=art, num=num)
+        return render_template('news.html', title='News', articles=art, num=num+1, more=more)
 
 @app.route('/edit', methods = ['GET', 'POST'])
 @login_required
