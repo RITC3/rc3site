@@ -75,10 +75,9 @@ ga('create', 'UA-54644206-2', 'auto');
                     </li>
 
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('news') }}"><i class="fa fa-newspaper-o"></i> News</a></li>
-                    <li class="divider"></li>
                     {% if g.user.is_authenticated() %}
-
+                        <li><a href="{{ url_for('news') }}"><i class="fa fa-newspaper-o"></i> News</a></li>
+                        <li class="divider"></li>
                         <li><a href="{{ url_for('user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
                         {% if g.user.role %}
