@@ -21,6 +21,6 @@
     </tbody>
 </table>
 </div>
-{% if more %}<p align="text-left"><a href="{{url_for('news_hist', num=num+1)}}">&lt;&lt; Older Articles</a></p>{% endif %}
-{% if less  %}<p align="text-right"><a href="{{url_for('news_hist', num=num-1)}}">&gt;&gt; Newer Articles</a></p>{% endif %}
+{% if more %}<div class="left"><a href="{{url_for('news_hist', num=num+1)}}">&lt;&lt; Older Articles</a></div>{% endif %}
+{% if num!=1  %}<div class="right"><a href="{{url_for('news_hist', num=num-1)}}">Newer Articles &gt;&gt;</a></div>{% endif %}
 {% endblock %}
