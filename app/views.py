@@ -152,11 +152,14 @@ def news():
 @login_required
 def news_hist(num):
     num = int(num)-1
-    arts_per_page = 25
+    arts_per_page = 5
     more = True
+    less = False
     art = News.query.order_by(desc('id'))
     if len(art[(num*arts_per_page):]) <= arts_per_page:
         more = False
+    if len(art[(num*arts_per_page):]) >= arts_per_page:
+        less = True
     art = art[(num*arts_per_page):arts_per_page*(num+1)]
     if not art or art is None:
         return render_template('404.html', title='404'), 404
