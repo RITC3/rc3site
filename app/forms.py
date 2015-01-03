@@ -229,3 +229,4 @@ class AddNewsArticle(Form):
     link = TextField('site', validators = [DataRequired()])
     date = DateField('date', validators = [DataRequired()])
     submit = SubmitField('submit')
+

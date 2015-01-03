@@ -14,6 +14,7 @@ from models import *
 from emails import send_welcome, contact_us, send_newsletter
 from facebook import rc3_post
 from config import USER_ROLES
+from sqlalchemy import desc
 import operator
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
@@ -126,6 +127,27 @@ def user(username):
 
     return render_template('user.html', title=user.nickname, user=user)
 
+#Articles on Articles (extra pages for 25+ articles)
+@app.route('news/<number>')
+@login_required
+    def news_hist(number):
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/resources')
 @login_required
 def resources():
@@ -144,7 +166,7 @@ def sem_resources(semester):
 @app.route('/news')
 @login_required
 def news():
-    art = [ n for n in News.query.all() ]
+    art = [ n for n in News.query.order_by(desc('id')) ]
     return render_template('news.html', title='News', articles=art)
 
 
@@ -346,7 +368,7 @@ def admin():
             flash('Article Uploaded')
             return redirect(url_for('admin'))
         else:
-            flash('Article not uploaded')
+            flash('Article not Uploaded')
 
     ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres, 'upload_article':upload_article}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
