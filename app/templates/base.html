@@ -48,18 +48,13 @@ ga('create', 'UA-54644206-2', 'auto');
 
             <section class="top-bar-section">
 
-                <ul class="left">
+                <ul>
 
                     <li class="divider"></li>
                         <li><a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a></li>
                     <li class="divider"></li>
-                    <li class="has-dropdown" data-dropdown="hoversb" data-options="is_hover:true"><a href="{{ url_for('scoreboard') }}"><i class="fa fa-table"></i> Scoreboard</a>
+                    <li class="has-dropdown" data-dropdown="hoversb" data-options="is_hover:true"><a href="{{ url_for('scoreboard') }}"><i class="fa fa-list"></i> Scoreboard</a>
                         <ul id="hoversb" class="f-dropdown" data-dropdown-content>
-                        {% for semester in g.semesters %}
-
-                            <li class="row"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
-
-                        {% endfor %}
                         <li class="row"><a href="{{url_for('halloffame')}}">Hall of Fame</a></li>
                         </ul>
                     </li>
@@ -108,6 +103,17 @@ ga('create', 'UA-54644206-2', 'auto');
                     <li class="divider"></li>
                     <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
                     <li class="divider"></li>
+                    <li class="right has-dropdown" data-dropdown="hoversem" data-options="is_hover:true"><a href="#"><i class="fa fa-gear"></i> Semester</a>
+                        <ul id="hoversem" class="f-dropdown columns" data-dropdown-content>
+    {% for semester in g.semesters %}
+        <li class="row"><a href="{{ url_for('sem_scoreboard', semester=semester.lname)}}">{{semester.name}}</a></li>
+    {% endfor %}
+    </ul>
+    </li>
+
+                {% block navi %}
+
+                {% endblock %}
 
                 </ul>
 
