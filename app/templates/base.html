@@ -48,7 +48,7 @@ ga('create', 'UA-54644206-2', 'auto');
 
             <section class="top-bar-section">
 
-                <ul>
+                <ul class="left">
 
                     <li class="divider"></li>
                         <li><a href="{{ url_for('index') }}"><i class="fa fa-home"></i></a></li>
@@ -81,9 +81,12 @@ ga('create', 'UA-54644206-2', 'auto');
                     <li class="divider"></li>
                     <li><a href="{{ url_for('about') }}"><i class="fa fa-question-circle"></i> About</a></li>
                     <li class="divider"></li>
+                </ul>
+                <ul class="right">
+                    <li class="divider"></li>
                     {% for semester in g.semesters %}
                     {% if semester.lname == g.semester %}
-                    <li class="right has-dropdown" data-dropdown="hoversem" data-options="is_hover:true"><a href="#"><i class="fa fa-gear"></i> {{semester.name}}</a>
+                    <li class="has-dropdown" data-dropdown="hoversem" data-options="is_hover:true"><a href="#"><i class="fa fa-gear"></i> {{semester.name}}</a>
                     {% endif %}
                     {% endfor %}
                         <ul id="hoversem" class="f-dropdown columns" data-dropdown-content>
