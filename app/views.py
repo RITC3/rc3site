@@ -153,7 +153,7 @@ def news():
 @login_required
 def news_hist(num):
     num = int(num)-1
-    arts_per_page =2
+    arts_per_page = 25
     more = True
     art = News.query.order_by(desc('id'))
     if len(art[(num*arts_per_page):]) <= arts_per_page:
