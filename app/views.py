@@ -38,8 +38,12 @@ def sort_user_scores(l, semester):
 @app.before_request
 def before_request():
     g.user = current_user
-    g.semester = Semester.query.filter_by(current=True).first()
+    g.csemester = Semester.query.filter_by(current=True).first()
+    g.route = request.path
     g.semesters = Semester.query.all()
+    if "semester" not in session.keys() or session['semester'] not in [ i.lname for i in g.semesters ]:
+        session['semester'] = g.csemester.lname
+    g.semester = session['semester']
     if g.user.is_authenticated():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
@@ -48,6 +52,8 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def index():
+    if request.args.get('next'):
+        return redirect(url_for(request.args.get('next')))
     usern = g.user
     browser = request.user_agent.browser
     if browser == "firefox":
@@ -55,9 +61,9 @@ def index():
 
     #only show the user if they are an admin
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
-    sort_user_scores(all_users, semester=g.semester)
+    sort_user_scores(all_users, semester=g.csemester)
 
-    return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=g.semester)
+    return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=g.csemester)
 
 @lm.user_loader
 def load_user(id):
@@ -130,15 +136,10 @@ def user(username):
 @app.route('/resources')
 @login_required
 def resources():
-    return redirect(url_for('sem_resources', semester=g.semester.lname))
-
-@app.route('/resources/<semester>')
-@login_required
-def sem_resources(semester):
-    sem = Semester.query.filter_by(lname=semester).first()
+    sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem == None:
         return render_template('404.html', title='404'), 404
-    pres = [ p for p in Presentation.query.all() if p.semester.lname == semester ]
+    pres = [ p for p in Presentation.query.all() if p.semester.lname == sem.lname ]
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
 #News section
@@ -201,11 +202,7 @@ def email():
 
 @app.route('/scoreboard')
 def scoreboard():
-    return redirect(url_for("sem_scoreboard", semester=g.semester.lname))
-
-@app.route('/scoreboard/<semester>')
-def sem_scoreboard(semester):
-    sem = Semester.query.filter_by(lname=semester).first()
+    sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem == None:
         return render_template('404.html', title='404'), 404
     all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] and user.get_score(semester=sem) ]
@@ -244,7 +241,7 @@ def admin():
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
-            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=g.semester.id)
+            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=session['semester'].id)
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
@@ -314,7 +311,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=g.semester.id)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=session['semester'].id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
@@ -355,7 +352,7 @@ def admin():
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
-            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=g.semester.id)
+            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=session['semester'].id)
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
@@ -376,12 +373,8 @@ def mailinglist():
 
 @app.route('/challenges')
 def challenges():
-    return redirect(url_for('sem_challenges', semester=g.semester.lname))
-
-@app.route('/challenges/<semester>')
-def sem_challenges(semester):
     try:
-        sem = Semester.query.filter_by(lname=semester).first()
+        sem = Semester.query.filter_by(lname=session['semester']).first()
         challenges = Challenge.query.filter_by(semester_id=sem.id)
     except:
             return render_template('404.html', title='404'), 404
@@ -440,6 +433,11 @@ def subscribe():
 @app.route('/signin')
 def signin():
     return redirect("http://goo.gl/forms/HsWUUBg4dW", code=302)
+
+@app.route('/sem_switch/<semester>')
+def sem_switch(semester):
+    session['semester'] = semester
+    return redirect(request.args.get('next'))
 
 @app.errorhandler(404)
 def not_found_error(error):
