@@ -40,7 +40,7 @@ def before_request():
     g.user = current_user
     g.csemester = Semester.query.filter_by(current=True).first()
     g.route = request.path
-    g.semesters = Semester.query.all()
+    g.semesters = Semester.query.order_by(desc('id'))
     if "semester" not in session.keys() or session['semester'] not in [ i.lname for i in g.semesters ]:
         session['semester'] = g.csemester.lname
     g.semester = session['semester']
