@@ -7,7 +7,9 @@
             {% for user in users %}
                 <tr valign="center">
                     <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a></td>
-                    <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
+                    <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a>
+                        {% if user.is_admin() %}  <a href="#" title="{{user.nickname}} is an admin"><i class="fa fa-star"></i></a>{% endif %}
+                    </td>
                     {% if challenge %}
                         <td>{{user.get_score(challenge=challenge, semester=challenge.semester)}}</td>
                     {% elif semester %}
