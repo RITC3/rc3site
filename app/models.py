@@ -29,6 +29,11 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.id)
 
+    def is_admin(self):
+        if self.role is USER_ROLES['admin']:
+            return True
+        return False
+
     '''This function should be simplified...'''
     def get_score(self, challenge='all', semester='all'):
         total = 0
