@@ -241,7 +241,7 @@ def admin():
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
-            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=session['semester'].id)
+            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=g.csemester.id)
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
