@@ -74,10 +74,6 @@ def login():
     session.pop('google_token', None)
     return google.authorize(callback=url_for('authorized', _external=True))
 
-@app.route('/ctf')
-def ctf():
-    return render_template("ctf.html", title='2014 CTF')
-
 @app.route('/logout')
 @login_required
 def logout():
