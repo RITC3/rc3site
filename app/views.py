@@ -60,7 +60,7 @@ def index():
         flash("Firefox often doesn't play nice with Google OAuth. You may want to try chrome if it won't let you login")
 
     #only show the user if they are an admin
-    all_users = [ user for user in User.query.all() if user.role != USER_ROLES['admin'] ]
+    all_users = User.query.filter(User.role != USER_ROLES['admin']).all()
     sort_user_scores(all_users, semester=g.csemester)
 
     return render_template("index.html", title='Home', user=usern, topusers=all_users[:5], semester=g.csemester)
