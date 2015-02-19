@@ -348,7 +348,7 @@ def admin():
     upload_article = AddNewsArticle()
     if request.form.get('submit', None) == 'Upload Article':
         if upload_article.validate_on_submit():
-            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=session['semester'].id)
+            article = News(title = upload_article.title.data, description = upload_article.description.data, link = upload_article.link.data, date = upload_article.date.data, semester_id=g.csemester.id)
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
