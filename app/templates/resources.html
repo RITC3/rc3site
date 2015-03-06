@@ -7,17 +7,22 @@
 <h4 class="text-center">Nothing here yet. Check back soon!</h4>
 {% endif %}
 
+{% set i=0 %}
+<ul class="accordion" data-accordion>
 {% if pres_list %}
 {% for pres in pres_list %}
-
+    <li class="accordion-navigation">
+    <a href="#panel{{i}}">
     <h2> <strong>Week {{pres.week}}</strong> - {{pres.name}}</h2>
+    </a>
 
+    <div id="panel{{i}}" class="content">
     <iframe src="{{pres.link}}" frameborder="1" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+    </div>
 
-    </br>
-    </br>
-
+    </li>
+{% set i = i+1 %}
 {% endfor %}
 {% endif %}
-
+</ul>
 {% endblock %}
