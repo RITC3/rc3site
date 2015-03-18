@@ -113,7 +113,7 @@ def authorized(response):
         #if the email address > 10 digits truncate
         username = me.data['email'].split('@')[0][:10]
         #if the username already exists append a random integer to the end
-        if User.query.filter_by(username=username).first() is not None:
+        while User.query.filter_by(username=username).first() is not None:
             username = username[:7] + str(randint(100,999))
         user = User(nickname=nickname, username=username, email=me.data['email'], role=USER_ROLES['user'])
         db.session.add(user)
