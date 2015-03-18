@@ -16,6 +16,7 @@ from facebook import rc3_post
 from config import USER_ROLES
 from sqlalchemy import desc
 import operator
+from random import randint
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
     from forms import *
@@ -91,12 +92,13 @@ def authorized(response):
     session['google_token'] = (response['access_token'], '')
     me = google.get('userinfo')
 
-    if me.data['email'][-7:].lower() != "rit.edu":
+    alloweduser = AllowedUser.query.filter_by(email=me.data['email'], ban=False).first()
+    if me.data['email'][-7:].lower() != "rit.edu" and alloweduser is None:
         me = None
         response = None
         logout_user()
         session.clear()
-        flash('You must log in with your RIT Email')
+        flash('You must log in with your RIT Email or obtain special permission to log in from an administrator')
         return redirect(url_for('index'))
 
     user = User.query.filter_by(email=me.data['email']).first()
@@ -107,8 +109,12 @@ def authorized(response):
             nickname = me.data['given_name']
         else:
             #Use everything up to @ for username (RIT ID)
-            nickname = me.data['email'].split('@')[0]
-        username = me.data['email'].split('@')[0]
+            nickname = me.data['email'].split('@')[0][:10]
+        #if the email address > 10 digits truncate
+        username = me.data['email'].split('@')[0][:10]
+        #if the username already exists append a random integer to the end
+        if User.query.filter_by(username=username).first() is not None:
+            username = username[:7] + str(randint(100,999))
         user = User(nickname=nickname, username=username, email=me.data['email'], role=USER_ROLES['user'])
         db.session.add(user)
         db.session.commit()
@@ -356,7 +362,18 @@ def admin():
         else:
             flash('Article not Uploaded')
 
-    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres, 'upload_article':upload_article}
+    add_allowed_user = AddAllowedUser()
+    if request.form.get('submit', None) == 'Add Allowed User':
+        if add_allowed_user.validate_on_submit():
+            allowed = AllowedUser(email=add_allowed_user.email.data, ban=add_allowed_user.ban.data)
+            db.session.add(allowed)
+            db.session.commit()
+            flash('User "{}" added'.format(add_allowed_user.email.data))
+            return redirect(url_for('admin'))
+        else:
+            flash('User not added')
+
+    ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres, 'upload_article':upload_article, 'add_allowed_user':add_allowed_user}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
 @app.route('/mailinglist')

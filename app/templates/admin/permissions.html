@@ -19,3 +19,19 @@
         </form>
     </div>
 </div>
+<div class="large-7 columns">
+    <h4><strong>Explicitly Allow User</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="allowuser">
+            {{ADMIN_FORMS['add_allowed_user'].hidden_tag()}}
+            {% for error in ADMIN_FORMS['add_allowed_user'].errors.email %}<span style="color: red;">{{error}}</span>{% endfor %}
+            <div class="large-4 columns">
+                <label>Email {{ADMIN_FORMS['add_allowed_user'].email}}</label>
+            </div>
+            <div class="large-4 columns">
+                <label>Ban? {{ADMIN_FORMS['add_allowed_user'].ban}}</label>
+            </div>
+            {{ADMIN_FORMS['add_allowed_user'].submit(class="button", value = 'Add Allowed User')}}
+        </form>
+    </div>
+</div>
