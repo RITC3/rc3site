@@ -201,7 +201,7 @@ class EditPresentation(Form):
     def validate(self):
         if not Form.validate(self):
             return False
-        if self.link.data and not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data):
+        if not re.search('https://.*google.com/./.*/presentation/.*embed.*', self.link.data) and not re.search("https://.*google.com/presentation/./.*/embed.*", self.link.data):
             return False
         return True
 

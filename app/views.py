@@ -113,7 +113,7 @@ def authorized(response):
         #if the email address > 10 digits truncate
         username = me.data['email'].split('@')[0][:10]
         #if the username already exists append a random integer to the end
-        if User.query.filter_by(username=username).first() is not None:
+        while User.query.filter_by(username=username).first() is not None:
             username = username[:7] + str(randint(100,999))
         user = User(nickname=nickname, username=username, email=me.data['email'], role=USER_ROLES['user'])
         db.session.add(user)
@@ -141,7 +141,7 @@ def resources():
     sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem == None:
         return render_template('404.html', title='404'), 404
-    pres = [ p for p in Presentation.query.all() if p.semester.lname == sem.lname ]
+    pres = [ p for p in Presentation.query.order_by('week') if p.semester.lname == sem.lname ]
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
 #News section
@@ -326,15 +326,13 @@ def admin():
     if request.form.get('submit', None) == 'Edit Presentation':
         if edit_pres.validate_on_submit():
             pres = Presentation.query.filter_by(id=edit_pres.pres.data).first()
-            if edit_pres.week:
-                pres.week = edit_pres.week.data
             if str(edit_pres.link.data) != "":
                 pres.link = edit_pres.link.data
             if str(edit_pres.name.data) != "":
                 pres.name = edit_pres.name.data
             db.session.add(pres)
             db.session.commit()
-            flash("Presentation Week {} - {} editied successfully".format(edit_pres.week.data, edit_pres.name.data))
+            flash("Presentation Week {} - {} editied successfully".format(pres.week, edit_pres.name.data))
             return redirect(url_for('admin'))
         else:
             flash("Invalid Presentation Edit")
