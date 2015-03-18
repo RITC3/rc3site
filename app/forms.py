@@ -1,6 +1,6 @@
 import re
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, TextAreaField, SelectField, IntegerField, SubmitField, widgets, SelectMultipleField
+from wtforms import TextField, BooleanField, TextAreaField, SelectField, IntegerField, SubmitField, widgets, SelectMultipleField, RadioField
 from wtforms.fields import DateField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
@@ -215,7 +215,7 @@ class DeletePresentation(Form):
     submit = SubmitField('submit')
 
     def validate(self):
-        if self.confirm:
+        if self.confirm.data:
             return True
         return False
 
@@ -230,3 +230,19 @@ class AddNewsArticle(Form):
     date = DateField('date', validators = [DataRequired()])
     submit = SubmitField('submit')
 
+    def validate(self):
+        return True
+
+"""Adding a non-rit user"""
+class AddAllowedUser(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    email = TextField('email', validators=[DataRequired()])
+    ban = RadioField('ban', choices=[('1', 'Yes'), ('0', 'No')], default='0')
+    submit = SubmitField('submit')
+
+    def validate(self):
+        if "@" in self.email.data:
+            return True
+        return False

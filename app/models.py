@@ -202,3 +202,12 @@ class News(db.Model):
 
     def __repr__(self):
         return '<News Item: {}>'.format(self.article)
+
+"""Table for explicitly allowed users outside RIT"""
+class AllowedUser(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(120), index = True, unique = True)
+    ban = db.Column(db.Boolean, default = False)
+
+    def __repr__(self):
+        return '<AllowedUser: {}>'.format(self.email)
