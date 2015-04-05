@@ -12,8 +12,8 @@ def send_async_email(msg):
         mail.send(msg)
 
 def send_email(subject, recipients, text_body, html_body):
-    sender = BASE_ADMINS[0]
-    msg = Message(subject, sender = sender, recipients = recipients)
+    sender = ('RC3 Admins', 'rc3club@gmail.com')
+    msg = Message(subject, sender = sender, bcc = recipients)
     msg.body = text_body
     msg.html = html_body
     send_async_email(msg)
