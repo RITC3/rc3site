@@ -1,7 +1,7 @@
 import re
 from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField, TextAreaField, SelectField, IntegerField, SubmitField, widgets, SelectMultipleField, RadioField
-from wtforms.fields import DateField
+from wtforms.fields import DateField, TextAreaField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
 from app.models import *
@@ -153,6 +153,15 @@ class Permission_User(Form):
     def validate(self):
         return True
 
+"""Fancy text editor"""
+class CKTextAreaWidget(widgets.TextArea):
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('class_', 'ckeditor')
+        return super(CKTextAreaWidget, self).__call__(field, **kwargs)
+
+class CKTextAreaField(TextAreaField):
+    widget = CKTextAreaWidget()
+
 class Send_Newsletter(Form):
     """docstring for Send_Newsletter"""
     def __init__(self, *args, **kwargs):
@@ -160,7 +169,7 @@ class Send_Newsletter(Form):
 
     default = DEFAULT_MEDIA
     subject = TextField('subject', validators = [DataRequired()])
-    body = TextAreaField('body', validators=[DataRequired()])
+    body = CKTextAreaField('body', validators=[DataRequired()])
     supported_socialmedia=SOCIAL_MEDIA
     choices = [(x,x) for x in supported_socialmedia]
     media = SelectMultipleField('media', choices = choices, option_widget= widgets.CheckboxInput())
@@ -240,3 +249,4 @@ class AddAllowedUser(Form):
         if "@" in self.email.data:
             return True
         return False
+
