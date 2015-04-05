@@ -1,6 +1,9 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(basedir, 'base_newsletter.html') , 'r') as f:
+    BASE_NEWSLETTER = f.read()
+
 f = open(os.path.join(basedir, 'app.stuff') , 'r')
 
 CSRF_ENABLED = True
@@ -17,7 +20,7 @@ MAIL_USE_SSL = f.readline().strip()
 MAIL_USERNAME = f.readline().strip()
 MAIL_PASSWORD = f.readline().strip()
 FACEBOOK_TOKEN = f.readline().strip()
-BASE_ADMINS = f.readline().split(',')
+BASE_ADMINS = [ x.rstrip() for x in f.readline().split(',') ]
 f.close()
 SOCIAL_MEDIA=['mail','facebook','twitter','reddit']
 DEFAULT_MEDIA=['mail']

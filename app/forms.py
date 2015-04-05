@@ -5,9 +5,7 @@ from wtforms.fields import DateField, TextAreaField
 from wtforms.validators import Required, Length, DataRequired
 from datetime import datetime
 from app.models import *
-from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES
-
-CURRENT_SEMESTER = Semester.query.filter_by(current=True).first()
+from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, BASE_NEWSLETTER
 
 def get_sorted_userlist():
     userchoices = []
@@ -168,8 +166,8 @@ class Send_Newsletter(Form):
         Form.__init__(self, *args, **kwargs)
 
     default = DEFAULT_MEDIA
-    subject = TextField('subject', validators = [DataRequired()])
-    body = CKTextAreaField('body', validators=[DataRequired()])
+    subject = TextField('subject', validators = [DataRequired()], default="RC3 Newsletter")
+    body = CKTextAreaField('body', validators=[DataRequired()], default=BASE_NEWSLETTER)
     supported_socialmedia=SOCIAL_MEDIA
     choices = [(x,x) for x in supported_socialmedia]
     media = SelectMultipleField('media', choices = choices, option_widget= widgets.CheckboxInput())
