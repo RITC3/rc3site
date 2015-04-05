@@ -5,6 +5,7 @@ from config import BASE_ADMINS
 from decorators import async
 from models import User
 from app import app, mail
+from time import sleep
 
 @async
 def send_async_email(msg):
@@ -29,7 +30,9 @@ def send_welcome(user):
 
 def send_newsletter(subject,body):
     users = [ x.email for x in User.query.filter_by(newsletter = 1).all() ]
-    send_email(subject, users, body, body)
+    for chunk in [users[x:x+20] for x in range(0, len(users), 20)]:
+        send_email(subject, chunk, body, body)
+        sleep(0.05)
 
 
 def contact_us(msg):
