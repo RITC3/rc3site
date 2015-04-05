@@ -110,12 +110,8 @@ class Update_Score(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
     userchoices = get_sorted_userlist()
-    challengechoices = []
-    challenges = Challenge.query.filter_by(semester_id=CURRENT_SEMESTER.id)
-    for chall in challenges:
-        challengechoices.append((chall.id, chall.name))
     user = SelectField('user', choices = userchoices)
-    challenge = SelectField('challenge', choices = challengechoices)
+    challenge = SelectField('challenge', choices =[])
     points = IntegerField('points', validators = [DataRequired()])
     submit = SubmitField('submit')
 
@@ -192,8 +188,7 @@ class EditPresentation(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER.id) ]
-    pres = SelectField('pres', choices=presentations, coerce=int)
+    pres = SelectField('pres', choices=[], coerce=int)
     name = TextField('name')
     link = TextField('link')
     submit = SubmitField('submit')
@@ -209,8 +204,7 @@ class DeletePresentation(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
-    presentations = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=CURRENT_SEMESTER.id) ]
-    pres = SelectField('pres', choices=presentations, coerce=int)
+    pres = SelectField('pres', choices=[], coerce=int)
     confirm = BooleanField('confirm', widget= widgets.CheckboxInput())
     submit = SubmitField('submit')
 

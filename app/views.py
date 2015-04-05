@@ -240,17 +240,18 @@ def admin():
     if not is_admin():
         return render_template('404.html', title='404'), 404
 
+    sess_sem = Semester.query.filter_by(lname=session['semester']).first()
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
-            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=g.csemester.id)
+            challenge = Challenge(name = create_challenge.name.data, date = create_challenge.date.data, about = create_challenge.about.data, semester_id=sess_sem.id)
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
             return redirect(url_for('admin'))
 
     update_score = Update_Score()
-    #update_score.choices = [(c.id, c.name) for c in Challenge.query.order_by('date')] query shit right at some point
+    update_score.challenge.choices = [(c.id, c.name) for c in Challenge.query.filter_by(semester_id=sess_sem.id).all()]
     if request.form.get('submit', None) == 'Update Score':
         if update_score.validate_on_submit():
             existing_score = Score.query.filter_by(user_id=update_score.data['user'], challenge_id=update_score.data['challenge']).first()
@@ -313,7 +314,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=g.csemester.id)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=sem_sess.id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
@@ -323,6 +324,7 @@ def admin():
 
     #presentation editing
     edit_pres = EditPresentation()
+    edit_pres.pres.choices = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=sess_sem.id) ]
     if request.form.get('submit', None) == 'Edit Presentation':
         if edit_pres.validate_on_submit():
             pres = Presentation.query.filter_by(id=edit_pres.pres.data).first()
@@ -339,6 +341,7 @@ def admin():
 
     #presentation deleting
     del_pres = DeletePresentation()
+    del_pres.pres.choices = [ (x.id, "Week {} - {}".format(x.week, x.name)) for x in Presentation.query.filter_by(semester_id=sess_sem.id) ]
     if request.form.get('submit', None) == 'Delete Presentation':
         if edit_pres.validate_on_submit():
             pres = Presentation.query.filter_by(id=del_pres.data['pres']).first()
