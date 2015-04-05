@@ -1,4 +1,4 @@
-from flask import render_template, copy_current_request_context
+from flask import render_template
 from flask.ext.mail import Message
 from flask import current_app
 from config import BASE_ADMINS
@@ -9,10 +9,11 @@ from app import app, mail
 @async
 def send_async_email(msg):
     with app.app_context():
+        mail.connect()
         mail.send(msg)
 
 def send_email(subject, recipients, text_body, html_body):
-    sender = ('RC3 Admins', 'rc3club@gmail.com')
+    sender = ('RC3 E-Board', 'rc3club@gmail.com')
     msg = Message(subject, sender = sender, bcc = recipients)
     msg.body = text_body
     msg.html = html_body
@@ -27,10 +28,8 @@ def send_welcome(user):
             user = user))
 
 def send_newsletter(subject,body):
-    users = User.query.filter_by(newsletter = 1)
-    with mail.connect() as conn:
-        for user in users:
-            send_email(subject, [user.email], body, body)
+    users = [ x.email for x in User.query.filter_by(newsletter = 1).all() ]
+    send_email(subject, users, body, body)
 
 
 def contact_us(msg):
