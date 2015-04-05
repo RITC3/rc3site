@@ -10,7 +10,7 @@
 			</div>
 			<div class="large-12 columns">
 				{% for error in ADMIN_FORMS['send_newsletter'].errors.body %}<span style="color: red;">{{error}}</span>{% endfor %}
-				<label>{{ADMIN_FORMS['send_newsletter'].body(rows = 12)}}</label>
+				<label>{{ADMIN_FORMS['send_newsletter'].body(rows = 5)}}</label>
 			</div>
 			<div class="large-12 columns">
 				<ul class="left"></ul>
@@ -27,7 +27,7 @@
 					{% endif %}
 				{% endfor %}
 			</div>
-			<p>{{ADMIN_FORMS['send_newsletter'].submit(class="button", value = 'Send Newsletter', disabled='disabled')}} This is disabled until the API hooks are done. Also needs a text formatter</p>
+			<p>{{ADMIN_FORMS['send_newsletter'].submit(class="button", value = 'Send Newsletter')}}</p>
 		</form>
 	</div>
 </div>

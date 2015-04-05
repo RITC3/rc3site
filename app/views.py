@@ -274,12 +274,9 @@ def admin():
         if newsletter_form.validate_on_submit():
             for media in newsletter_form['media']:
                 if media.checked:
-                    if media.data == "mail":
+                    if str(media.data) == "mail":
                         send_newsletter(newsletter_form['subject'].data, newsletter_form['body'].data)
-                        #flash('Sent newsletter to {0}'.format(str(users)))
-                    if media.data == "facebook":
-                        result = rc3_post()
-                        flash(str(result))
+                        flash('Sent newsletter')
                     else:
                         flash("Sorry, {0} hasn't been implemented yet".format(media.data))
             return redirect(url_for('admin'))

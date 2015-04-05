@@ -173,7 +173,6 @@ class Send_Newsletter(Form):
     supported_socialmedia=SOCIAL_MEDIA
     choices = [(x,x) for x in supported_socialmedia]
     media = SelectMultipleField('media', choices = choices, option_widget= widgets.CheckboxInput())
-    # media = MultiCheckboxField('media', choices=choices)
     submit = SubmitField('submit')
 
 class Add_Presentation(Form):

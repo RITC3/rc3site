@@ -1,13 +1,15 @@
-from flask import render_template
+from flask import render_template, copy_current_request_context
 from flask.ext.mail import Message
-from app import mail
+from flask import current_app
 from config import BASE_ADMINS
 from decorators import async
 from models import User
+from app import app, mail
 
 @async
 def send_async_email(msg):
-    mail.send(msg)
+    with app.app_context():
+        mail.send(msg)
 
 def send_email(subject, recipients, text_body, html_body):
     sender = BASE_ADMINS[0]
