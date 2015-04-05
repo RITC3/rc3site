@@ -20,5 +20,5 @@ FACEBOOK_TOKEN = f.readline().strip()
 BASE_ADMINS = f.readline().split(',')
 f.close()
 SOCIAL_MEDIA=['mail','facebook','twitter','reddit']
-DEFAULT_MEDIA=['mail','facebook']
+DEFAULT_MEDIA=['mail']
 USER_ROLES = {'admin':1,'user':0}
