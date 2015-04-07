@@ -4,11 +4,11 @@
  
         {% if title %}
  
-            <title>{{title}} - RC3</title>
+            <title>{{title}} - IRSeC</title>
  
         {% else %}
  
-            <title>Welcome to RC3</title>
+            <title>IRSeC</title>
  
         {% endif %}
  
@@ -38,7 +38,7 @@ ga('create', 'UA-54644206-2', 'auto');
                 <li class="name">
                     <h1>
 
-                    <a href="{{ url_for('main.index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
+                    <a href="{{ url_for('.index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
 
                     </h1>
 
@@ -51,50 +51,14 @@ ga('create', 'UA-54644206-2', 'auto');
                 <ul class="left">
 
                     <li class="divider"></li>
-                        <li><a href="{{ url_for('main.index') }}"><i class="fa fa-home"></i></a></li>
+                        <li><a href="{{ url_for('.index') }}"><i class="fa fa-home"></i></a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('main.scoreboard') }}"><i class="fa fa-list"></i> Scoreboard</a></li>
+                    <li><a href="{{ url_for('.sponsors') }}"><i class="fa fa-list"></i> Sponsors</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('main.challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
+                    <li><a href="{{ url_for('.signup') }}"><i class="fa fa-globe"></i> Signup</a></li>
                     <li class="divider"></li>
-                    {% if g.user.is_authenticated() %}
-                        <li><a href="{{ url_for('main.news') }}"><i class="fa fa-newspaper-o"></i> News</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{ url_for('main.user', username = g.user.username) }}"><i class="fa fa-user"></i> Profile</a></li>
-                        <li class="divider"></li>
-                        {% if g.user.role %}
-
-                            <li><a href="{{ url_for('main.admin') }}"><i class="fa fi-wrench"></i> Admin</a></li>
-                            <li class="divider"></li>
-
-                        {% endif %}
-                        <li><a href="{{ url_for('main.resources') }}"><i class="fa fi-page-multiple"></i> Resources</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{ url_for('main.logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
-
-                    {% else %}
-
-                        <li><a href="{{ url_for('main.login') }}"><i class="fa fa-user"></i> Login</a></li>
-
-                    {% endif %}
-
+                    <li><a href="{{ url_for('.about') }}"><i class="fa fa-question-circle"></i> About</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('main.about') }}"><i class="fa fa-question-circle"></i> About</a></li>
-                    <li class="divider"></li>
-                </ul>
-                <ul class="right">
-                    <li class="divider"></li>
-                    {% for semester in g.semesters %}
-                    {% if semester.lname == g.semester %}
-                    <li class="has-dropdown" data-dropdown="hoversem" data-options="is_hover:true"><a href="#"><i class="fa fa-gear"></i> {{semester.name}}</a>
-                    {% endif %}
-                    {% endfor %}
-                        <ul id="hoversem" class="f-dropdown columns" data-dropdown-content>
-    {% for semester in g.semesters %}
-        <li class="row"><a href="{{ url_for('main.sem_switch', next=g.route, semester=semester.lname)}}">{{semester.name}}</a></li>
-    {% endfor %}
-    </ul>
-    </li>
                 </ul>
 
             </section>

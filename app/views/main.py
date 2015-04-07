@@ -4,22 +4,25 @@ The main view fuction for the website. This defines each "route" and
 what should happen when a user visits the page.
 """
 
-import re
+import os
 import sys
 from datetime import datetime
-from flask import render_template, flash, redirect, session, url_for, request, g, abort
+from flask import render_template, flash, redirect, session, url_for, request, g, abort, Blueprint
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, google
-from models import *
-from emails import send_welcome, contact_us, send_newsletter
-from facebook import rc3_post
+from app.models import *
+from app.emails import send_welcome, contact_us, send_newsletter
+from app.facebook import rc3_post
 from config import USER_ROLES
 from sqlalchemy import desc
 import operator
 from random import randint
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
-    from forms import *
+    from app.forms import *
+
+
+main = Blueprint('main', __name__)
 
 def is_admin():
     if g.user.role == 1:
@@ -36,7 +39,7 @@ def sort_user_scores(l, semester):
            j -= 1
         l[j+1] = key
 
-@app.before_request
+@main.before_request
 def before_request():
     g.user = current_user
     g.csemester = Semester.query.filter_by(current=True).first()
@@ -50,8 +53,8 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
 
-@app.route('/')
-@app.route('/index')
+@main.route('/')
+@main.route('/index')
 def index():
     if request.args.get('next'):
         return redirect(url_for(request.args.get('next')))
@@ -70,24 +73,24 @@ def index():
 def load_user(id):
     return User.query.get(int(id))
 
-@app.route('/login')
+@main.route('/login')
 def login():
     session.pop('google_token', None)
-    return google.authorize(callback=url_for('authorized', _external=True))
+    return google.authorize(callback=url_for('main.authorized', _external=True))
 
-@app.route('/logout')
+@main.route('/logout')
 @login_required
 def logout():
     logout_user()
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-@app.route('/login/authorized')
+@main.route('/login/authorized')
 @google.authorized_handler
 def authorized(response):
     if response is None:
         flash('Login failed :(')
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     session['google_token'] = (response['access_token'], '')
     me = google.get('userinfo')
@@ -99,7 +102,7 @@ def authorized(response):
         logout_user()
         session.clear()
         flash('You must log in with your RIT Email or obtain special permission to log in from an administrator')
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     user = User.query.filter_by(email=me.data['email']).first()
     if user is None:
@@ -112,20 +115,20 @@ def authorized(response):
             nickname = me.data['email'].split('@')[0][:10]
         #if the email address > 10 digits truncate
         username = me.data['email'].split('@')[0][:10]
-        #if the username already exists append a random integer to the end
+        #if the username already exists mainend a random integer to the end
         while User.query.filter_by(username=username).first() is not None:
             username = username[:7] + str(randint(100,999))
         user = User(nickname=nickname, username=username, email=me.data['email'], role=USER_ROLES['user'])
         db.session.add(user)
         db.session.commit()
     login_user(user, remember = False)
-    return redirect(request.args.get('next') or url_for('index'))
+    return redirect(request.args.get('next') or url_for('main.index'))
 
 @google.tokengetter
 def get_google_oauth_token():
     return session.get('google_token')
 
-@app.route('/user/<username>')
+@main.route('/user/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first()
@@ -135,7 +138,7 @@ def user(username):
 
     return render_template('user.html', title=user.nickname, user=user)
 
-@app.route('/resources')
+@main.route('/resources')
 @login_required
 def resources():
     sem = Semester.query.filter_by(lname=session['semester']).first()
@@ -145,13 +148,13 @@ def resources():
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
 #News section
-@app.route('/news')
+@main.route('/news')
 @login_required
 def news():
-    return redirect(url_for('news_hist', num=1))
+    return redirect(url_for('main.news_hist', num=1))
 
 #Articles on Articles (extra pages for 25+ articles)
-@app.route('/news/<num>')
+@main.route('/news/<num>')
 @login_required
 def news_hist(num):
     num = int(num)-1
@@ -166,7 +169,7 @@ def news_hist(num):
     else:
         return render_template('news.html', title='News', articles=art, num=num+1, more=more)
 
-@app.route('/edit', methods = ['GET', 'POST'])
+@main.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
     form = EditForm(g.user.nickname)
@@ -181,7 +184,7 @@ def edit():
         db.session.add(g.user)
         db.session.commit()
         flash('Your changes have been saved.')
-        return redirect(url_for('user', username=g.user.username))
+        return redirect(url_for('main.user', username=g.user.username))
     else:
         form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
@@ -192,17 +195,17 @@ def edit():
             form.newsletter.data = False
     return render_template('edit.html', title='Edit', form=form, user=g.user)
 
-@app.route('/email', methods=['POST'])
+@main.route('/email', methods=['POST'])
 def email():
     # Check post values
     if False:
         flash('Sorry, please try to send your message again')
-        return redirect(url_for('contact'))
+        return redirect(url_for('main.contact'))
     # Spawn new process to send email
     flash('Your message has been sent!')
-    return redirect(url_for('contact'))
+    return redirect(url_for('main.contact'))
 
-@app.route('/scoreboard')
+@main.route('/scoreboard')
 def scoreboard():
     sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem == None:
@@ -211,13 +214,13 @@ def scoreboard():
     sort_user_scores(all_users, semester=sem)
     return render_template('scoreboard.html', title='Scoreboard', users=all_users, semester=sem)
 
-@app.route('/halloffame')
+@main.route('/halloffame')
 def halloffame():
     users = [ user for user in User.query.all() if user.get_score() ]
     users = sorted(users, reverse=True)
     return render_template('halloffame.html', users=users[:10])
 
-@app.route('/contact', methods=['GET', 'POST'])
+@main.route('/contact', methods=['GET', 'POST'])
 def contact():
     form = ContactUs()
     if form.validate_on_submit():
@@ -226,15 +229,15 @@ def contact():
         email = [subject, message]
         contact_us(email)
         flash('Your message has been sent!')
-        return redirect(url_for('contact'))
+        return redirect(url_for('main.contact'))
     return render_template('contact.html', title='Contact', form=form)
 
-@app.route('/about')
+@main.route('/about')
 def about():
     return render_template('about.html', title='About')
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@main.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
     if not is_admin():
@@ -248,7 +251,7 @@ def admin():
             db.session.add(challenge)
             db.session.commit()
             flash('Challenge created!')
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
 
     update_score = Update_Score()
     update_score.challenge.choices = [(c.id, c.name) for c in Challenge.query.filter_by(semester_id=sess_sem.id).all()]
@@ -260,14 +263,14 @@ def admin():
                 db.session.add(existing_score)
                 db.session.commit()
                 flash('Score updated!')
-                return redirect(url_for('admin'))
+                return redirect(url_for('main.admin'))
             else:
                 semester_id = Challenge.query.filter_by(id=update_score.data['challenge']).first().semester_id
                 new_score = Score(user_id=update_score.data['user'], challenge_id=update_score.data['challenge'], points=update_score.data['points'], semester_id=semester_id)
                 db.session.add(new_score)
                 db.session.commit()
                 flash('Score created!')
-                return redirect(url_for('admin'))
+                return redirect(url_for('main.admin'))
 
     newsletter_form = Send_Newsletter()
     if request.form.get('submit', None) == 'Send Newsletter':
@@ -279,7 +282,7 @@ def admin():
                         flash('Sent newsletter')
                     else:
                         flash("Sorry, {0} hasn't been implemented yet".format(media.data))
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
 
     permissions = Permission_User()
     if request.form.get('submit', None) == 'Update User':
@@ -296,7 +299,7 @@ def admin():
                 role = "a user."
             flash(str("{0} is now {1}".format(updated_user.nickname, role)))
             #Send email alerting this happened
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
 
     add_sub = Add_Subscriber()
     if request.form.get('submit', None) == 'Add Subscriber':
@@ -305,7 +308,7 @@ def admin():
             for user in users:
                 email, major = user.split('/', 1)
                 flash(email + ' is a ' + major)
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
 
     #presentation form generation
     add_pres = Add_Presentation()
@@ -315,7 +318,7 @@ def admin():
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         else:
             flash("Invalid Presentation")
 
@@ -332,7 +335,7 @@ def admin():
             db.session.add(pres)
             db.session.commit()
             flash("Presentation Week {} - {} editied successfully".format(pres.week, edit_pres.name.data))
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         else:
             flash("Invalid Presentation Edit")
 
@@ -346,7 +349,7 @@ def admin():
             db.session.delete(pres)
             db.session.commit()
             flash("{} deleted".format(name))
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
 
     #Uploading news article
     upload_article = AddNewsArticle()
@@ -356,7 +359,7 @@ def admin():
             db.session.add(article)
             db.session.commit()
             flash('Article Uploaded')
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         else:
             flash('Article not Uploaded')
 
@@ -367,14 +370,14 @@ def admin():
             db.session.add(allowed)
             db.session.commit()
             flash('User "{}" added'.format(add_allowed_user.email.data))
-            return redirect(url_for('admin'))
+            return redirect(url_for('main.admin'))
         else:
             flash('User not added')
 
     ADMIN_FORMS = {'send_newsletter':newsletter_form, 'create_challenge':create_challenge, 'update_score':update_score, 'permission_user':permissions, 'add_subscriber':add_sub, 'add_presentation':add_pres, 'edit_presentation':edit_pres, 'delete_presentation':del_pres, 'upload_article':upload_article, 'add_allowed_user':add_allowed_user}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
-@app.route('/mailinglist')
+@main.route('/mailinglist')
 def mailinglist():
     if not is_admin():
         return render_template("404.html", title="Nope"), 404
@@ -382,7 +385,7 @@ def mailinglist():
         mlist = User.query.filter_by(newsletter=1)
         return render_template("mailinglist.html", mlist=mlist)
 
-@app.route('/challenges')
+@main.route('/challenges')
 def challenges():
     try:
         sem = Semester.query.filter_by(lname=session['semester']).first()
@@ -391,7 +394,7 @@ def challenges():
             return render_template('404.html', title='404'), 404
     return render_template('challenges.html', title='Challenges', challenges=challenges, user=g.user, semester=sem)
 
-@app.route('/challenges/<semester>/<chall>')
+@main.route('/challenges/<semester>/<chall>')
 def challenge(semester, chall):
     sem = Semester.query.filter_by(lname=semester).first()
     if sem == None:
@@ -401,7 +404,7 @@ def challenge(semester, chall):
         return render_template('404.html', title='404'), 404
     return render_template('single_challenge.html', title='Challenge', challenge=challenge, user=g.user, semester=sem)
 
-@app.route('/edit_challenge/<semester>/<chall>', methods = ['GET','POST'])
+@main.route('/edit_challenge/<semester>/<chall>', methods = ['GET','POST'])
 @login_required
 def edit_challenge(semester, chall):
     if not is_admin():
@@ -416,49 +419,41 @@ def edit_challenge(semester, chall):
         db.session.add(challenge)
         db.session.commit()
         flash('Your changes have been saved!')
-        return redirect(url_for('challenge', chall = form.name.data, semester=sem.lname ))
+        return redirect(url_for('main.challenge', chall = form.name.data, semester=sem.lname ))
     else:
         form.name.data = challenge.name
         form.about.data = challenge.about
         form.date.data = challenge.date
     return render_template('edit_challenge.html', title='Edit Challenge', form=form, challenge=challenge)
 
-@app.route('/unsubscribe')
+@main.route('/unsubscribe')
 @login_required
 def unsubscribe():
     g.user.newsletter = 0
     db.session.add(g.user)
     db.session.commit()
     flash("You've been unsubscribed. To subscribe, go to your profile and choose Edit")
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-@app.route('/subscribe')
+@main.route('/subscribe')
 @login_required
 def subscribe():
     g.user.newsletter = 1
     db.session.add(g.user)
     db.session.commit()
     flash("You've been subscribed. To unsubscribe, go to your profile and choose Edit")
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-@app.route('/signin')
+@main.route('/signin')
 def signin():
     return redirect("http://goo.gl/forms/HsWUUBg4dW", code=302)
 
-@app.route('/sem_switch/<semester>')
+@main.route('/sem_switch/<semester>')
 def sem_switch(semester):
     session['semester'] = semester
     return redirect(request.args.get('next'))
 
-@app.errorhandler(404)
+@main.errorhandler(404)
 def not_found_error(error):
-    return render_template('404.html', title='404'), 404
+    return render_template('404.html')
 
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return render_template('500.html'), 500
-
-@app.route('/', subdomain='irsec')
-def irsec_index():
-    return render_template('irsec/index.html')

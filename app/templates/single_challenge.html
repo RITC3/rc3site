@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2> <a href="{{ url_for('challenges') }}">Challenges</a>/{{challenge.name}}</h2>
+<h2> <a href="{{ url_for('main.challenges') }}">Challenges</a>/{{challenge.name}}</h2>
 <div class="small-8 columns panel">
         <h3>About</h3>
         <p>
@@ -15,7 +15,7 @@
         </p>
         {% endif %}
     {% if user.role == 1 %}
-    <a href="{{ url_for('edit_challenge', chall = challenge.name, semester=semester.lname )}}" class="button success"> Edit</a>
+    <a href="{{ url_for('main.edit_challenge', chall = challenge.name, semester=semester.lname )}}" class="button success"> Edit</a>
     <a href="" class="button alert"> Delete</a>
     {% endif %}
     </div>
