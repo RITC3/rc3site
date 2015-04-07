@@ -6,19 +6,19 @@ irsec = Blueprint('irsec', __name__, subdomain='irsec', static_folder="../static
 @irsec.route('/')
 @irsec.route('/index')
 def index():
-    return render_template('irsec/index.html')
+    return render_template('irsec/index.html', title="Home")
 
 @irsec.route('/sponsors')
 def sponsors():
-    return render_template('irsec/sponsors.html')
+    return render_template('irsec/sponsors.html', title="Sponsors")
 
 @irsec.route('/signup')
 def signup():
-    return render_template('irsec/signup.html')
+    return render_template('irsec/signup.html', title="Signup")
 
 @irsec.route('/about')
 def about():
-    return render_template('irsec/about.html')
+    return render_template('irsec/about.html', title="About")
 
 @irsec.errorhandler(404)
 def not_found_error(error):
