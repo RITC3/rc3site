@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="row">
-            {% if user.id == g.user.id %} <div class="small-3 columns"><a class="button tiny success submit" href="{{url_for('edit')}}">EDIT</a></div>{% endif %}
+            {% if user.id == g.user.id %} <div class="small-3 columns"><a class="button tiny success submit" href="{{url_for('main.edit')}}">EDIT</a></div>{% endif %}
         </div>
     </div>
     {{user.pic}}

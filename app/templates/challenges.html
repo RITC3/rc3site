@@ -12,14 +12,14 @@
 {% set i = 0 %}
 {% for challenge in challenges %}
         <div class="row panel">
-            <div class="small-4 medium-4 columns"><a href="{{ url_for('challenge', chall = challenge.name, semester=semester.lname)}}">{{challenge.name}}</a></div>
+            <div class="small-4 medium-4 columns"><a href="{{ url_for('main.challenge', chall = challenge.name, semester=semester.lname)}}">{{challenge.name}}</a></div>
             <div class="small-3 medium-6 columns">{{ challenge.about|truncate(60) }}</div>
             <div class="small-2 medium-2 columns"><a href="#" data-dropdown="hover{{i}}" data-options="is_hover:true">{{challenge.total_users()}} Participants</a></div>
             {% if challenge.total_users() > 0 %}
                 <ul id="hover{{i}}" class="f-dropdown" data-dropdown-content>
                 {% set users = challenge.get_users() %}
                 {% for user in users %}
-                    <li><a href="{{ url_for('user', username = user.username)}}">{{user.nickname}}</a></li>
+                    <li><a href="{{ url_for('main.user', username = user.username)}}">{{user.nickname}}</a></li>
                 {% endfor %}
                 </ul>
             {% endif %}

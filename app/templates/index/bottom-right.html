@@ -4,8 +4,8 @@
   		<tbody>
 			{% for user in topusers %}
 			<tr valign="center">
-                <td><a href="{{ url_for('user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a>
-                <td><a href="{{ url_for('user', username = user.username )}}">{{user.nickname}}</a></td>
+                <td><a href="{{ url_for('main.user', username = user.username )}}"><img src="{{user.avatar(30)}}"></a>
+                <td><a href="{{ url_for('main.user', username = user.username )}}">{{user.nickname}}</a></td>
                 <td>{{user.get_score(semester=semester)}}</td>
             </tr>
             {% endfor %}

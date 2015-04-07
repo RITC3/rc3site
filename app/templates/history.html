@@ -1,7 +1,7 @@
         <div class="small-12 panel left">
 
             <div class="small-1 columns hide-for-small"><img src="{{score.user.avatar(50)}}" class="th"></div>
-            <div class="small-10 columns left"><strong>Participated in <a href="{{ url_for('challenge', chall = score.challenge.name, semester=score.challenge.semester.lname)}}"> {{score.challenge.name}} ({{score.challenge.semester.name}})</a></strong></div>
+            <div class="small-10 columns left"><strong>Participated in <a href="{{ url_for('main.challenge', chall = score.challenge.name, semester=score.challenge.semester.lname)}}"> {{score.challenge.name}} ({{score.challenge.semester.name}})</a></strong></div>
             {%	if score.points > 0 %}
             <a href="javascript:void(0)" class="left small-2 medium-1"><span class="score">+ {{score.points}}</span></a>
             {% endif %}
