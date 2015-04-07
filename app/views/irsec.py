@@ -18,7 +18,7 @@ def signup():
 
 @irsec.route('/about')
 def about():
-    return render_template('irsec/comingsoon.html')
+    return render_template('irsec/about.html')
 
 @irsec.errorhandler(404)
 def not_found_error(error):
