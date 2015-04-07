@@ -34,15 +34,6 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 mail = Mail(app)
-@app.errorhandler(404)
-def handle_404(e):
-    path = request.path
-    for bp_name, bp in app.blueprints.items():
-        if path.startswith(str(bp.url_prefix)):
-            handler = app.error_handler_spec.get(bp_name, {}).get(404)
-            if handler is not None:
-                return handler(e)
-    return render_template('400.html'), 404
 
 @app.errorhandler(500)
 def internal_error(error):

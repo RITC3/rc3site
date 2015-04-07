@@ -4,7 +4,7 @@ The main view fuction for the website. This defines each "route" and
 what should happen when a user visits the page.
 """
 
-import re
+import os
 import sys
 from datetime import datetime
 from flask import render_template, flash, redirect, session, url_for, request, g, abort, Blueprint
@@ -20,6 +20,7 @@ from random import randint
 #this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
 if not "db_create" in sys.argv[0]:
     from app.forms import *
+
 
 main = Blueprint('main', __name__)
 
