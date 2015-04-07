@@ -3,6 +3,7 @@ from app import app, db
 
 irsec = Blueprint('irsec', __name__, subdomain='irsec')
 
-@irsec.route('/', subdomain='irsec')
+@irsec.route('/')
+@irsec.route('/index')
 def irsec_index():
     return render_template('irsec/index.html')

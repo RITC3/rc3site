@@ -1,6 +1,6 @@
 import os
 import facebook
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -34,10 +34,15 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 mail = Mail(app)
-
 @app.errorhandler(404)
-def not_found_error(error):
-    return render_template('404.html', title='404'), 404
+def handle_404(e):
+    path = request.path
+    for bp_name, bp in app.blueprints.items():
+        if path.startswith(str(bp.url_prefix)):
+            handler = app.error_handler_spec.get(bp_name, {}).get(404)
+            if handler is not None:
+                return handler(e)
+    return render_template('400.html'), 404
 
 @app.errorhandler(500)
 def internal_error(error):
@@ -45,7 +50,8 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 from app import models
-from app.views import irsec, main
+from app.views import irsec, main, blog
+app.register_blueprint(blog.blog)
 app.register_blueprint(irsec.irsec)
 app.register_blueprint(main.main)
 
