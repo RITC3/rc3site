@@ -14,7 +14,7 @@ def sponsors():
 
 @irsec.route('/signup')
 def signup():
-    return render_template('irsec/comingsoon.html')
+    return render_template('irsec/signup.html')
 
 @irsec.route('/about')
 def about():
