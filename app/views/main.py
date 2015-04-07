@@ -453,7 +453,3 @@ def sem_switch(semester):
     session['semester'] = semester
     return redirect(request.args.get('next'))
 
-@main.errorhandler(404)
-def not_found_error(error):
-    return render_template('404.html')
-
