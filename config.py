@@ -7,6 +7,7 @@ with open(os.path.join(basedir, 'base_newsletter.html') , 'r') as f:
 f = open(os.path.join(basedir, 'app.stuff') , 'r')
 
 CSRF_ENABLED = True
+SERVER_NAME = 'rc3.club'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db') + '?check_same_thread=False'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
