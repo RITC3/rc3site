@@ -35,6 +35,10 @@ lm.login_view = 'login'
 
 mail = Mail(app)
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html')
+
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
