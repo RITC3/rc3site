@@ -2,20 +2,18 @@
 
 {% block content %}
 
+<div class="row">
+    <div class="small-12 columns">
+        {% include "index/top.html" %}
     </div>
-
-        <div class="row">
-            <div class="small-12 columns">
-                {% include "index/top.html" %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="small-12 medium-6 columns">
-                {% include "index/bottom-left.html" %}
-            </div>
-            <div class="small-12 medium-6 columns">
-                {% include "index/bottom-right.html" %}
-            </div>
-        </div>
+</div>
+<div class="row">
+    <div class="small-12 medium-6 columns">
+        {% include "index/bottom-left.html" %}
+    </div>
+    <div class="small-12 medium-6 columns">
+        {% include "index/bottom-right.html" %}
+    </div>
+</div>
 
 {% endblock %}
