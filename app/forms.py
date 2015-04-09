@@ -247,3 +247,19 @@ class AddAllowedUser(Form):
             return True
         return False
 
+class Add_Post(Form):
+    """docstring for Send_Newsletter"""
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+
+    title = TextField('subject', validators = [DataRequired()], default="")
+    body = CKTextAreaField('body', validators=[DataRequired()])
+    submit = SubmitField('submit')
+
+class Edit_Post(Form):
+    def __init__(self, *args, **kwargs):
+        Form.__init(self, *args, **kwargs)
+
+    title = TextField('subject', validators = [DataRequired()])
+    body = CKTextAreaField('body', validators=[DataRequired()])
+    submit = SubmitField('submit')

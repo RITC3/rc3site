@@ -1,0 +1,18 @@
+<div class="large-14 columns">
+<link rel="stylesheet" href="/static/foundation-icons/foundation-icons.css">
+	<h4><strong>Send Newsletter</strong></h4>
+   	<div class="panel">
+		<form action="" method="POST" name="add_post">
+			{{BLOG_FORMS['add_post'].hidden_tag()}}
+			<div class="large-12 columns">
+				<label>Title: {% for error in BLOG_FORMS['add_post'].errors.title %}<span style="color: red;">You must put a subject</span>{% endfor %}
+				{{BLOG_FORMS['add_post'].title(cols = 6)}}</label>
+			</div>
+			<div class="large-12 columns">
+				{% for error in BLOG_FORMS['add_post'].errors.body %}<span style="color: red;">{{error}}</span>{% endfor %}
+				<label>{{BLOG_FORMS['add_post'].body(rows = 5)}}</label>
+			</div>
+			<p>{{BLOG_FORMS['add_post'].submit(class="button", value = 'Add Post')}}</p>
+		</form>
+	</div>
+</div>

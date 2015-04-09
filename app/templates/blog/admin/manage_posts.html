@@ -1,0 +1,17 @@
+<h2 class="text-center">Posts</h2>
+
+<div class="small-12 columns">
+{% for post in posts %}
+        <div class="row panel">
+            <div class="small-4 medium-4 columns"><a href="{{url_for('.post', num=post.id)}}">{{post.title}}</a></div>
+            <div class="small-2 medium-2 columns"><a href="#" id="selector"><div class="score center">Edit</div></a></div>
+        </div>
+{% endfor %}
+</div>
+
+<!-- put the the overlay below before closing </body> the end of the page -->
+<div class="overlayOuter"> 
+    <div class="overlayInner">
+        <h1>h1</h1>
+    </div>
+  </div>
