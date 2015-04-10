@@ -37,10 +37,13 @@ ga('create', 'UA-54644206-2', 'auto');
 
                 <li class="name">
                     <h1>
-
-                    <a href="{{ url_for('main.index') }}"><img height="56" width="56" src="/static/img/logo.png"></a>
+                        <a href="#" class="has-dropdown" data-dropdown="site-nav"><img height="56" width="56" src="/static/img/logo.png"></a>
 
                     </h1>
+                    <ul id="site-nav" class="foundationGrey f-dropdown" data-dropdown-content>
+                        <li class="row"><a href="{{url_for('main.index')}}" class="greyText">Main</a></li>
+                        <li class="row"><a href="{{url_for('irsec.index')}}" class="greyText">IRSeC</a></li>
+                    </ul>
 
                 </li>
 
@@ -53,7 +56,12 @@ ga('create', 'UA-54644206-2', 'auto');
                     <li class="divider"></li>
                         <li><a href="{{ url_for('main.index') }}"><i class="fa fa-home"></i></a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('main.scoreboard') }}"><i class="fa fa-list"></i> Scoreboard</a></li>
+                    <li class="has-dropdown" data-dropdown="hover-score" data-options="is_hover:true"><a href="#"><i class="fa fa-list"></i> Scoreboard</a>
+                        <ul id="hover-score" class="f-dropdown columns" data-dropdown-content>
+                            <li class="row"><a href="{{url_for('main.scoreboard')}}">Single Semester</a></li>
+                            <li class="row"><a href="{{url_for('main.halloffame')}}">Hall of Fame</a></li>
+                        </ul>
+                    </li>
                     <li class="divider"></li>
                     <li><a href="{{ url_for('main.challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
                     <li class="divider"></li>
@@ -74,7 +82,7 @@ ga('create', 'UA-54644206-2', 'auto');
 
                     {% else %}
 
-                        <li><a href="{{ url_for('main.login') }}"><i class="fa fa-user"></i> Login</a></li>
+                        <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
 
                     {% endif %}
 

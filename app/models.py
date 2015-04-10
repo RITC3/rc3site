@@ -121,7 +121,8 @@ class Semester(db.Model):
 class Post(db.Model):
     """docstring for Post"""
     id = db.Column(db.Integer, primary_key = True)
-    body = db.Column(db.String(140))
+    title = db.Column(db.String(50))
+    body = db.Column(db.String(25000))
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

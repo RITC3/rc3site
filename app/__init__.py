@@ -1,16 +1,15 @@
 import os
 import facebook
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, url_for
 from flask.ext.mail import Mail
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
+from flask.ext.login import LoginManager, logout_user, login_required
 from flask_oauthlib.client import OAuth
 from config import basedir, GOOGLE_CONSUMER_KEY, GOOGLE_CONSUMER_SECRET, BASE_ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, FACEBOOK_TOKEN
 
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-
 
 oauth = OAuth(app)
 
@@ -34,6 +33,8 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 mail = Mail(app)
+from app import models
+from app.views import irsec, main, blog
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -44,8 +45,15 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-from app import models
-from app.views import irsec, main, blog
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')
+
+@app.route('/login')
+def login():
+    session.pop('google_token', None)
+    return google.authorize(callback=url_for('main.authorized', _external=True))
+
 app.register_blueprint(blog.blog)
 app.register_blueprint(irsec.irsec)
 app.register_blueprint(main.main)

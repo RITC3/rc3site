@@ -73,17 +73,12 @@ def index():
 def load_user(id):
     return User.query.get(int(id))
 
-@main.route('/login')
-def login():
-    session.pop('google_token', None)
-    return google.authorize(callback=url_for('main.authorized', _external=True))
-
 @main.route('/logout')
 @login_required
 def logout():
     logout_user()
     session.clear()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('.index'))
 
 @main.route('/login/authorized')
 @google.authorized_handler
@@ -123,10 +118,6 @@ def authorized(response):
         db.session.commit()
     login_user(user, remember = False)
     return redirect(request.args.get('next') or url_for('main.index'))
-
-@google.tokengetter
-def get_google_oauth_token():
-    return session.get('google_token')
 
 @main.route('/user/<username>')
 @login_required
@@ -314,7 +305,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=sem_sess.id)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=sess_sem.id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))
