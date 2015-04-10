@@ -305,7 +305,7 @@ def admin():
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
-            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=sem_sess.id)
+            new_pres = Presentation(name=add_pres.name.data, week=add_pres.week.data, link=add_pres.link.data, semester_id=sess_sem.id)
             db.session.add(new_pres)
             db.session.commit()
             flash(str("Presentation Week {} - {} Added".format(add_pres.week.data, add_pres.name.data)))

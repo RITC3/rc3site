@@ -56,7 +56,12 @@ ga('create', 'UA-54644206-2', 'auto');
                     <li class="divider"></li>
                         <li><a href="{{ url_for('main.index') }}"><i class="fa fa-home"></i></a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url_for('main.scoreboard') }}"><i class="fa fa-list"></i> Scoreboard</a></li>
+                    <li class="has-dropdown" data-dropdown="hover-score" data-options="is_hover:true"><a href="#"><i class="fa fa-list"></i> Scoreboard</a>
+                        <ul id="hover-score" class="f-dropdown columns" data-dropdown-content>
+                            <li class="row"><a href="{{url_for('main.scoreboard')}}">Single Semester</a></li>
+                            <li class="row"><a href="{{url_for('main.halloffame')}}">Hall of Fame</a></li>
+                        </ul>
+                    </li>
                     <li class="divider"></li>
                     <li><a href="{{ url_for('main.challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
                     <li class="divider"></li>
