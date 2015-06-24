@@ -4,6 +4,8 @@ Well here it is up on git! Neat! Its also messy as shit, but that's okay :)
 
 Setup
 -----
+If you REALLY want to run your own instance then just email me (jmg2967@rit.edu) or the current maintainer. The instructions below won't get you a functioning server. You still need to set up your own app.stuff (removed for security) and OAuth details
+
 Since the site relies on a python virtualenv you have to run the setup script before using it
 
 This guide assumes you don't have anything except python 2.7 installed and was written for Ubuntu
