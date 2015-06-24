@@ -145,6 +145,7 @@ def resources():
 #    return redirect(url_for('main.news_hist', num=1))
 
 #Articles on Articles (extra pages for 25+ articles)
+'''
 @main.route('/news/<num>')
 @login_required
 def news_hist(num):
@@ -159,6 +160,7 @@ def news_hist(num):
         return render_template('404.html', title='404'), 404
     else:
         return render_template('news.html', title='News', articles=art, num=num+1, more=more)
+'''
 
 @main.route('/edit', methods = ['GET', 'POST'])
 @login_required
