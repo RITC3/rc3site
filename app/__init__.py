@@ -41,6 +41,8 @@ mail = Mail(app)
 
 #this starts the app
 from app import models
+db.create_all()
+db.session.commit()
 from app.views import irsec, main, blog
 
 #error handlers, login, and google auth tokengetter are global
