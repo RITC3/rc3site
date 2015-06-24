@@ -4,3 +4,4 @@ flask
 tmp
 db_repo*
 *.pyc
+app.stuff
