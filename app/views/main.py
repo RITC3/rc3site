@@ -138,11 +138,11 @@ def resources():
     pres = [ p for p in Presentation.query.order_by('week') if p.semester.lname == sem.lname ]
     return render_template('resources.html', title='Resources', pres_list=pres, semester=sem)
 
-#News section
-@main.route('/news')
-@login_required
-def news():
-    return redirect(url_for('main.news_hist', num=1))
+#News section... maybe some other time...
+#@main.route('/news')
+#@login_required
+#def news():
+#    return redirect(url_for('main.news_hist', num=1))
 
 #Articles on Articles (extra pages for 25+ articles)
 @main.route('/news/<num>')
