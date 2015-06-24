@@ -1,0 +1,6 @@
+Flask-Mail
+Flask-Oauthlib
+Flask-WTF
+Flask-SQLAlchemy
+Flask-Login
+Flask-Migrate
