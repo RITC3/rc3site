@@ -3,7 +3,22 @@ from hashlib import md5
 from config import USER_ROLES
 
 class User(db.Model):
-    """docstring for User"""
+    '''The database model for users
+    Parent: flask.ext.sqlalchemy.Model
+    Attributes:
+        id - primary key for the database
+        nickname - the nickname for the user
+        username - the username (rit DCE or first 10 of the user email) for the user
+        email - the email address of the user
+        role - the role of the user, see USER_ROLES in config.py
+        postition - the position name for the user
+        major - the major of study for the user
+        newsletter - user preference for newsletter receipt
+        about_me - the user bio
+        last_seen - the last time the user was on the site
+        posts - the posts that the user has posted
+        scores - the individual scores that the user has earned for challenges
+    '''
     id = db.Column(db.Integer, primary_key = True)
     nickname = db.Column(db.String(64), index = True)
     username = db.Column(db.String(10), index = True, unique = True)
@@ -18,24 +33,47 @@ class User(db.Model):
     scores = db.relationship('Score', backref = 'user', lazy = 'dynamic')
 
     def is_authenticated(self):
+        '''Is the user authenticated
+        Returns: True, always
+        '''
         return True
 
     def is_active(self):
+        '''Is the user active?
+        Returns: True, always
+        '''
         return True
 
     def is_anonymous(self):
+        '''Is the user anonymous?
+        Returns: False, always
+        '''
         return False
 
     def get_id(self):
+        '''Gets the user id
+        Returns: The user id as unicode
+        '''
         return unicode(self.id)
 
     def is_admin(self):
+        '''Is the user an admin?
+        Returns: True if the user is an admin, False otherwise
+        '''
         if self.role is USER_ROLES['admin']:
             return True
         return False
 
     '''This function should be simplified...'''
     def get_score(self, challenge='all', semester='all'):
+        '''Get the score for the user
+        args:
+            challenge - the challenge object to get the score for
+            semester - the semester object to get the score for
+        Returns: the total number of points for the user for the specified
+                 semester and challenge
+        Note: This function should be simplified
+        '''
         total = 0
         if semester is 'all':
             if challenge is 'all':
