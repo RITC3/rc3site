@@ -1,3 +1,6 @@
+'''
+facebook.py - post to facebook (not implemented yet)
+'''
 import facebook
 from config import FACEBOOK_TOKEN
 from decorators import async
@@ -15,6 +18,10 @@ def send_fbpost(subject, recipients, text_body, html_body):
 """
 
 def rc3_post():
+    '''Post to facebook
+    Returns: the id of the RC3 group
+    Note: this token is expired. don't worry
+    '''
     token = 'CAAD4psDZByDkBAIrw39E1jFrZBdbRU6OyZAjiWKbhd0SEq31YJaZAPT3pog0dlg6QnaDx26VjCjlUJ4cKRKjehYkTvO6OLENlZA9k7h0gG57FpHgvrp0ZCP9ZAVa3atdOrPFujgIRZCAnq8ZAEeoJRMZCF665n3Xpd48L7bFUeaQ05ZCtHVVEKcIlhvcwPAZC8cn4VRrkEJ8O8kYy7MFalNZB9jZBCd1ZAnjMeRv6UZD'
     graph = facebook.GraphAPI(token)#FACEBOOK_TOKEN)
     profile = graph.get_object("me/groups")

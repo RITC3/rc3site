@@ -12,7 +12,9 @@ from app.models import *
 from config import SOCIAL_MEDIA, DEFAULT_MEDIA, USER_ROLES, BASE_NEWSLETTER
 
 def get_sorted_userlist():
-    '''Sorts a the userlist by nickname'''
+    '''Sorts a the userlist by nickname
+    Returns: a list of all users sorted alphabetically by nickname
+    '''
     userchoices = []
     users = User.query.all()
     users.sort(key=lambda user: user.nickname.lower())
@@ -40,6 +42,7 @@ class MultiCheckboxField(SelectMultipleField):
             field - the checkbox field to be set
         kwargs:
             checked - the checked attribute of the box
+        Returns: the result of the parent __call__ function
         '''
         if getattr(field, 'checked', field.data):
             kwargs['checked'] = True
@@ -74,6 +77,7 @@ class EditForm(Form):
         Extra conditions:
             nickname name must be unique
             nickname name must be changed
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -114,6 +118,7 @@ class Edit_Challenge(Form):
         Extra conditions:
             challenge name must be unique
             challenge name must be changed
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -139,7 +144,9 @@ class ContactUs(Form):
     body = TextAreaField('body', validators = [Length(min = 1, max = 1000)])
 
     def validate(self):
-        '''validate the form input'''
+        '''validate the form input
+        Returns: True on sucessful validation, False when validation fails
+        '''
         return Form.validate(self)
 
 
@@ -166,6 +173,7 @@ class Create_Challenge(Form):
         Extra conditions:
             challenge name must be unique
             challenge name must be changed
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -197,7 +205,9 @@ class Update_Score(Form):
         Form.__init__(self, *args, **kwargs)
 
     def validate(self):
-        '''validate the form input'''
+        '''validate the form input
+        Returns: True on sucessful validation, False when validation fails
+        '''
         return Form.validate(self)
 
 
@@ -220,6 +230,7 @@ class Add_Subscriber(Form):
         '''validate the form input
         Extra condition:
             the user must have an RIT email address
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -253,7 +264,9 @@ class Permission_User(Form):
         Form.__init__(self, *args, **kwargs)
 
     def validate(self):
-        '''validate the form input'''
+        '''validate the form input
+        Returns: True on sucessful validation, False when validation fails
+        '''
         return Form.validate(self)
 
 
@@ -264,6 +277,7 @@ class CKTextAreaWidget(widgets.TextArea):
     def __call__(self, field, **kwargs):
         '''Make the class of the widget ckeditor so the input box is replaced
         with CKEditor
+        Returns: the result of the parent __call__ function
         '''
         kwargs.setdefault('class_', 'ckeditor')
         return super(CKTextAreaWidget, self).__call__(field, **kwargs)
@@ -328,6 +342,7 @@ class Add_Presentation(Form):
         '''validate the form input
         Extra condition:
             The url must be a google presentation
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -361,6 +376,7 @@ class EditPresentation(Form):
         '''validate the form input
         Extra condition:
             the presentation must be a google presentation
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -391,6 +407,7 @@ class DeletePresentation(Form):
         '''validate the form input
         Extra condition:
             the deleteion must be confirmed
+        Returns: True on sucessful validation, False when validation fails
         '''
         if not Form.validate(self):
             return False
@@ -420,7 +437,9 @@ class AddNewsArticle(Form):
         Form.__init__(self, *args, **kwargs)
 
     def validate(self):
-        '''validate the form input'''
+        '''validate the form input
+        Returns: True on sucessful validation, False when validation fails
+        '''
         return Form.validate(self)
 
 class AddAllowedUser(Form):
@@ -443,10 +462,12 @@ class AddAllowedUser(Form):
         '''validate the form input
         Extra condition:
             there must be an @ in the email address entered
+        Returns: True on sucessful validation, False when validation fails
         '''
         if "@" in self.email.data:
             return True
         return False
+
 
 '''''''''''''''''''''''
 Blog forms
