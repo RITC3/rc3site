@@ -17,9 +17,7 @@ from config import USER_ROLES
 from sqlalchemy import desc
 import operator
 from random import randint
-#this is a fix for db_create, the forms class tries to access the DB before it is created if this isn't here
-if not "db_create" in sys.argv[0]:
-    from app.forms import *
+from app.forms import *
 
 
 main = Blueprint('main', __name__)
