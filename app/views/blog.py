@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, abort, Blueprint
+from flask import render_template, flash, redirect, url_for, request, g, Blueprint
 from flask.ext.login import login_required, current_user
 from datetime import datetime
-from app import app, db
+from app import db
 from app.models import Post
 from app.forms import Add_Post
 
@@ -37,15 +37,20 @@ def admin():
     add_post = Add_Post()
     if request.form.get('submit', None) == 'Add Post':
         if add_post.validate_on_submit():
-            post = Post(title=add_post.data['title'], body=add_post.data['body'], user_id=g.user.id)
+            post = Post(title=add_post.data['title'],
+                        body=add_post.data['body'],
+                        user_id=g.user.id)
             db.session.add(post)
             db.session.commit()
             return redirect(url_for('blog.admin'))
         else:
             flash("Invalid post")
 
-    BLOG_FORMS = {'add_post':add_post}
-    return render_template('blog/admin.html', title="Blog Admin", BLOG_FORMS=BLOG_FORMS, posts=posts)
+    BLOG_FORMS = {'add_post': add_post}
+    return render_template('blog/admin.html',
+                           title="Blog Admin",
+                           BLOG_FORMS=BLOG_FORMS,
+                           posts=posts)
 
 @blog.route('/post/<num>')
 def post(num):
