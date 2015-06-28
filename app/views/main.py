@@ -37,11 +37,13 @@ def sort_user_scores(l, semester):
 def before_request():
     '''Runs before every request to get information to be used in the
     rendered pages
+    Gets the user object, current semester object, and semester list
+    Also updates the user's last seen time
     '''
     g.user = current_user
     g.csemester = Semester.query.filter_by(current=True).first()
     g.route = request.path
-    g.semesters = Semester.query.order_by(desc('id')).first()
+    g.semesters = Semester.query.order_by(desc('id')).all()
     if "semester" not in session.keys() or session['semester'] \
             not in [ i.lname for i in g.semesters ]:
         session['semester'] = g.csemester.lname
@@ -79,11 +81,19 @@ def index():
 
 @lm.user_loader
 def load_user(id):
+    '''Gets the current user object from the user id
+    arg:
+        id - the current user's id from the database
+    Returns: the user object
+    '''
     return User.query.get(int(id))
 
 @main.route('/logout')
 @login_required
 def logout():
+    '''The user logout page
+    Returns: A redirect for the index page, after clearing the session
+    '''
     logout_user()
     session.clear()
     return redirect(url_for('.index'))
@@ -91,6 +101,9 @@ def logout():
 @main.route('/login/authorized')
 @google.authorized_handler
 def authorized(response):
+    '''Handles the OAuth response from Google
+    Returns: a redirect to the index page, after logging the user in (or erroring)
+    '''
     if response is None:
         flash('Login failed :(')
         return redirect(url_for('main.index'))
@@ -98,6 +111,7 @@ def authorized(response):
     session['google_token'] = (response['access_token'], '')
     me = google.get('userinfo')
 
+    #is the user either from RIT or explicitly allowed?
     alloweduser = AllowedUser.query.filter_by(email=me.data['email'], ban=False).first()
     if me.data['email'][-7:].lower() != "rit.edu" and alloweduser is None:
         me = None
@@ -108,6 +122,7 @@ def authorized(response):
               or obtain special permission to log in from an administrator')
         return redirect(url_for('main.index'))
 
+    #get the existing user, or create a new one
     user = User.query.filter_by(email=me.data['email']).first()
     if user is None:
         if me.data['name']:
@@ -134,16 +149,23 @@ def authorized(response):
 @main.route('/user/<username>')
 @login_required
 def user(username):
+    '''Profile page for a user
+    arg:
+        username - the name of the user
+    Returns: the rendered profile page for the user
+    '''
     user = User.query.filter_by(username=username).first()
     if user is None:
         flash('User not found.')
         abort(404)
-
     return render_template('user.html', title=user.nickname, user=user)
 
 @main.route('/resources')
 @login_required
 def resources():
+    '''The presentations section of the site
+    Returns: the rendered resources page for the selected semester
+    '''
     sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem is None:
         return render_template('404.html', title='404'), 404
@@ -156,6 +178,10 @@ def resources():
 @main.route('/edit', methods = ['GET', 'POST'])
 @login_required
 def edit():
+    '''Allows editing a user's profile
+    Returns: The profile editing page or the user's profile page when the edit
+             is committed
+    '''
     form = EditForm(g.user.nickname)
     if form.validate_on_submit():
         g.user.nickname = form.nickname.data
@@ -181,6 +207,10 @@ def edit():
 
 @main.route('/email', methods=['POST'])
 def email():
+    '''Sends an email to the rc3 admins
+    Returns: a redirect for the contact us page after the email has been sent
+    Note: Not implemented yet... perhaps not needed at all
+    '''
     # Check post values
     if False:
         flash('Sorry, please try to send your message again')
@@ -191,6 +221,9 @@ def email():
 
 @main.route('/scoreboard')
 def scoreboard():
+    '''The semester scoreboard page
+    Returns: the rendered scoreboard page for the selected semester
+    '''
     sem = Semester.query.filter_by(lname=session['semester']).first()
     if sem is None:
         return render_template('404.html', title='404'), 404
@@ -204,12 +237,18 @@ def scoreboard():
 
 @main.route('/halloffame')
 def halloffame():
+    '''The scoreboard page for top all time scores across semesters
+    Returns: the rendered hall of fame page
+    '''
     users = [ user for user in User.query.all() if user.get_score() ]
     users = sorted(users, reverse=True)
     return render_template('halloffame.html', users=users[:10])
 
 @main.route('/contact', methods=['GET', 'POST'])
 def contact():
+    '''The page for contacting the RC3 admins
+    Returns: the rendered contact page
+    '''
     form = ContactUs()
     if form.validate_on_submit():
         subject = "{0} has sent the RC3 Admins a Message".format(form.name.data)
@@ -225,16 +264,23 @@ def contact():
 
 @main.route('/about')
 def about():
+    '''The page describing the club and it's members
+    Returns: the rendered about page
+    '''
     return render_template('about.html', title='About')
 
 
 @main.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
+    '''The administrative panel for the site
+    Returns: The rendered admin panel
+    '''
     if not is_admin():
         return render_template('404.html', title='404'), 404
-
     sess_sem = Semester.query.filter_by(lname=session['semester']).first()
+
+    #challenge creation panel
     create_challenge = Create_Challenge()
     if request.form.get('submit', None) == 'Create Challenge':
         if create_challenge.validate_on_submit():
@@ -247,6 +293,7 @@ def admin():
             flash('Challenge created!')
             return redirect(url_for('main.admin'))
 
+    #score creating panel
     update_score = Update_Score()
     update_score.challenge.choices = \
         [(c.id, c.name) for c in Challenge.query.filter_by(semester_id=sess_sem.id).all()]
@@ -274,6 +321,7 @@ def admin():
                 flash('Score created!')
                 return redirect(url_for('main.admin'))
 
+    #newsletter composing and sending panel
     newsletter_form = Send_Newsletter()
     if request.form.get('submit', None) == 'Send Newsletter':
         if newsletter_form.validate_on_submit():
@@ -304,6 +352,7 @@ def admin():
             #Send email alerting this happened
             return redirect(url_for('main.admin'))
 
+    #adding subscribers panel
     add_sub = Add_Subscriber()
     if request.form.get('submit', None) == 'Add Subscriber':
         if add_sub.validate_on_submit():
@@ -313,7 +362,7 @@ def admin():
                 flash(email + ' is a ' + major)
             return redirect(url_for('main.admin'))
 
-    #presentation form generation
+    #presentation adding/editing/deleting panel
     add_pres = Add_Presentation()
     if request.form.get('submit', None) == 'Add Presentation':
         if add_pres.validate_on_submit():
@@ -328,8 +377,6 @@ def admin():
             return redirect(url_for('main.admin'))
         else:
             flash("Invalid Presentation")
-
-    #presentation editing
     edit_pres = EditPresentation()
     edit_pres.pres.choices = [ (x.id, "Week {} - {}".format(x.week, x.name))
                               for x in Presentation.query.filter_by(semester_id=sess_sem.id) ]
@@ -347,8 +394,6 @@ def admin():
             return redirect(url_for('main.admin'))
         else:
             flash("Invalid Presentation Edit")
-
-    #presentation deleting
     del_pres = DeletePresentation()
     del_pres.pres.choices = [ (x.id, "Week {} - {}".format(x.week, x.name))
                              for x in Presentation.query.filter_by(semester_id=sess_sem.id) ]
@@ -361,22 +406,7 @@ def admin():
             flash("{} deleted".format(name))
             return redirect(url_for('main.admin'))
 
-    #Uploading news article
-    upload_article = AddNewsArticle()
-    if request.form.get('submit', None) == 'Upload Article':
-        if upload_article.validate_on_submit():
-            article = News(title = upload_article.title.data,
-                           description = upload_article.description.data,
-                           link = upload_article.link.data,
-                           date = upload_article.date.data,
-                           semester_id=g.csemester.id)
-            db.session.add(article)
-            db.session.commit()
-            flash('Article Uploaded')
-            return redirect(url_for('main.admin'))
-        else:
-            flash('Article not Uploaded')
-
+    #allowed user panel
     add_allowed_user = AddAllowedUser()
     if request.form.get('submit', None) == 'Add Allowed User':
         if add_allowed_user.validate_on_submit():
@@ -389,6 +419,7 @@ def admin():
         else:
             flash('User not added')
 
+    #use a dict for easier access of forms from the page
     ADMIN_FORMS = {'send_newsletter': newsletter_form,
                    'create_challenge': create_challenge,
                    'update_score': update_score,
@@ -403,6 +434,9 @@ def admin():
 
 @main.route('/mailinglist')
 def mailinglist():
+    '''The mailing list page for admins to see who is signed up
+    Returns: The rendered mailing list page
+    '''
     if not is_admin():
         return render_template("404.html", title="Nope"), 404
     else:
@@ -411,6 +445,9 @@ def mailinglist():
 
 @main.route('/challenges')
 def challenges():
+    '''The challenge list page
+    Returns: the rendered challenge list page for the selected semester
+    '''
     try:
         sem = Semester.query.filter_by(lname=session['semester']).first()
         challenges = Challenge.query.filter_by(semester_id=sem.id)
@@ -424,6 +461,12 @@ def challenges():
 
 @main.route('/challenges/<semester>/<chall>')
 def challenge(semester, chall):
+    '''The challenge viewing page
+    args:
+        semester - the semester the challenge is in
+        chall - the challenge name
+    Returns: The challenge viewing page
+    '''
     sem = Semester.query.filter_by(lname=semester).first()
     if sem is None:
         return render_template('404.html', title='404'), 404
@@ -439,6 +482,13 @@ def challenge(semester, chall):
 @main.route('/edit_challenge/<semester>/<chall>', methods = ['GET', 'POST'])
 @login_required
 def edit_challenge(semester, chall):
+    '''The challenge editing page
+    args:
+        semester - the semester the challenge is in
+        chall - the challenge name
+    Returns: The challenge editing form, or the challenge page when the
+             challenge is saved
+    '''
     if not is_admin():
         return render_template('404.html', title='404'), 404
     sem = Semester.query.filter_by(lname=semester).first()
@@ -466,6 +516,10 @@ def edit_challenge(semester, chall):
 @main.route('/unsubscribe')
 @login_required
 def unsubscribe():
+    '''The newsletter unsubscription page
+    Returns: a redirect for the index page after unsubscribing the user from
+    the newsletter
+    '''
     g.user.newsletter = 0
     db.session.add(g.user)
     db.session.commit()
@@ -475,6 +529,9 @@ def unsubscribe():
 @main.route('/subscribe')
 @login_required
 def subscribe():
+    '''The newsletter subscription page
+    Returns: a redirect for the index page after subscribing the user to the newsletter
+    '''
     g.user.newsletter = 1
     db.session.add(g.user)
     db.session.commit()
@@ -483,9 +540,15 @@ def subscribe():
 
 @main.route('/signin')
 def signin():
+    '''The signin link that redirects to the google form for signing in to a meeting
+    Returns: A redirect to the sign in form
+    '''
     return redirect("http://goo.gl/forms/HsWUUBg4dW", code=302)
 
 @main.route('/sem_switch/<semester>')
 def sem_switch(semester):
+    '''The page for switching semesters
+    Returns: a redirect for the last page the user was on
+    '''
     session['semester'] = semester
     return redirect(request.args.get('next'))
