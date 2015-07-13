@@ -279,7 +279,10 @@ class CKTextAreaWidget(widgets.TextArea):
         with CKEditor
         Returns: the result of the parent __call__ function
         '''
-        kwargs.setdefault('class_', 'ckeditor')
+        if kwargs.get('class'):
+            kwargs['class'] += " ckeditor"
+        else:
+            kwargs.setdefault('class_', 'ckeditor')
         return super(CKTextAreaWidget, self).__call__(field, **kwargs)
 
 

@@ -16,6 +16,11 @@ from app.forms import *
 #defines the main path for the application
 main = Blueprint('main', __name__)
 
+def is_admin():
+    if g.user.role == USER_ROLES['admin']:
+        return True
+    return False
+
 def sort_user_scores(l, semester):
     '''Sorts users by score for the scoreboard
     args:
@@ -428,7 +433,6 @@ def admin():
                    'add_presentation': add_pres,
                    'edit_presentation': edit_pres,
                    'delete_presentation': del_pres,
-                   'upload_article': upload_article,
                    'add_allowed_user': add_allowed_user}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 

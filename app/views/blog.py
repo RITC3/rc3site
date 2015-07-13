@@ -3,9 +3,12 @@ from flask.ext.login import login_required, current_user
 from datetime import datetime
 from app import db
 from app.models import Post
-from app.forms import Add_Post
+from app.forms import CKTextAreaField
+from flask.ext.admin import AdminIndexView, BaseView
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
 
-blog = Blueprint('blog', __name__, subdomain='blog')
+blog = Blueprint('blog', __name__, subdomain='blog', static_folder="../static")
 
 def is_admin():
     if g.user.role == 1:
@@ -27,34 +30,36 @@ def index():
     posts = Post.query.all()
     return render_template('blog/index.html', posts=posts)
 
-
-@blog.route('/admin', methods = ['GET', 'POST'])
-@login_required
-def admin():
-    if not is_admin():
-        return render_template('404.html'), 404
-    posts = Post.query.all()
-    add_post = Add_Post()
-    if request.form.get('submit', None) == 'Add Post':
-        if add_post.validate_on_submit():
-            post = Post(title=add_post.data['title'],
-                        body=add_post.data['body'],
-                        user_id=g.user.id)
-            db.session.add(post)
-            db.session.commit()
-            return redirect(url_for('blog.admin'))
-        else:
-            flash("Invalid post")
-
-    BLOG_FORMS = {'add_post': add_post}
-    return render_template('blog/admin.html',
-                           title="Blog Admin",
-                           BLOG_FORMS=BLOG_FORMS,
-                           posts=posts)
-
 @blog.route('/post/<num>')
 def post(num):
     post = Post.query.filter_by(id=num).first()
     if post is None:
         return render_template('404.html'), 404
     return render_template('blog/single_post.html', post=post)
+
+class ProtectedBaseView(BaseView):
+    def is_accessible(self):
+        if current_user.is_authenticated() and current_user.role == 1:
+            return True
+        return False
+
+    def _handle_view(self, name, **kwargs):
+            if not self.is_accessible():
+                flash("You don't have permission to go there", category="warning")
+                return redirect(url_for('main.index'))
+
+class ProtectedIndexView(AdminIndexView, ProtectedBaseView):
+    pass
+
+class ProtectedModelView(ModelView, ProtectedBaseView):
+    pass
+
+class ProtectedFileAdmin(FileAdmin, ProtectedBaseView):
+    pass
+
+class PostModelView(ProtectedModelView):
+    edit_template = 'blog/admin/edit_add_post.html'
+    create_template = 'blog/admin/edit_add_post.html'
+    form_overrides = dict(body=CKTextAreaField)
+    def __init__(self, session):
+        super(PostModelView, self).__init__(Post, session)

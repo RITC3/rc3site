@@ -10,6 +10,10 @@ from flask.ext.login import LoginManager, logout_user, login_required
 from flask_oauthlib.client import OAuth
 from config import basedir, GOOGLE_CONSUMER_KEY, GOOGLE_CONSUMER_SECRET, \
 BASE_ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, FACEBOOK_TOKEN
+from flask.ext.admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.base import MenuLink
+from flask_admin.contrib.fileadmin import FileAdmin
 
 # Initialize the app and database, import the config
 app = Flask(__name__)
@@ -76,12 +80,24 @@ def login():
     session.pop('google_token', None)
     return google.authorize(callback=url_for('main.authorized', _external=True))
 
+#blog admin setup
+admin = Admin(app, 'Blog Admin', subdomain="blog",
+              template_mode='bootstrap3',
+              index_view=blog.ProtectedIndexView())
+admin.add_link(MenuLink(name='Back to Site', url='/'))
+admin.add_view(blog.PostModelView(db.session))
+admin.add_view(FileAdmin(os.path.join(basedir, 'app/static/bloguploads'), '/static/bloguploads/', name="Blog Uploads"))
+
 #blueprints are each section of the app
 app.register_blueprint(blog.blog)
 app.register_blueprint(irsec.irsec)
 app.register_blueprint(main.main)
 
 
+'''for rule in app.url_map.iter_rules():
+        #import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+    print rule.endpoint
+    '''
 """
 if not app.debug:
     import logging
