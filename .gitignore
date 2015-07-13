@@ -5,3 +5,4 @@ tmp
 db_repo*
 *.pyc
 app.stuff
+app/static/bloguploads/*
