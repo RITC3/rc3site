@@ -121,6 +121,8 @@ class User(db.Model):
         Returns: True if user scores are equal, False otherwise
         Note: Broken
         '''
+        if other is None:
+            return False
         return self.get_score() == other.get_score()
 
     def __lt__(self, other):
