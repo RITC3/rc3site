@@ -86,7 +86,7 @@ admin = Admin(app, 'Blog Admin', subdomain="blog",
               index_view=blog.ProtectedIndexView())
 admin.add_link(MenuLink(name='Back to Site', url='/'))
 admin.add_view(blog.PostModelView(db.session))
-admin.add_view(FileAdmin(os.path.join(basedir, 'app/static/bloguploads'), '/static/bloguploads/', name="Blog Uploads"))
+admin.add_view(blog.ProtectedFileAdmin(os.path.join(basedir, 'app/static/bloguploads'), '/static/bloguploads/', name="Blog Uploads"))
 
 #blueprints are each section of the app
 app.register_blueprint(blog.blog)
