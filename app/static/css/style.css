@@ -1,4 +1,4 @@
-body > .row { margin-top: 2em;}
+body > .row { margin-top: 2em; padding-left: 1em; padding-right: 1em;}
 table, tbody, tr{ width: 100%;}
 .youtube{ margin: 2em 0 0 15%;}
 .row.account-info{ margin-bottom: 2em;}
