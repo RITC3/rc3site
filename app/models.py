@@ -1,6 +1,7 @@
 from app import db
 from hashlib import md5
 from config import USER_ROLES
+from datetime import datetime
 
 class User(db.Model):
     '''The database model for users
@@ -112,7 +113,7 @@ class User(db.Model):
         '''Prints when the object is called directly
         Returns: A string to describe the object
         '''
-        return '<User %r>' % (self.nickname)
+        return self.nickname
 
     def __eq__(self, other):
         '''The equals comparison, compares user scores
@@ -121,9 +122,7 @@ class User(db.Model):
         Returns: True if user scores are equal, False otherwise
         Note: Broken
         '''
-        if other is None:
-            return False
-        return self.get_score() == other.get_score()
+        return self.id == other.id
 
     def __lt__(self, other):
         '''The less than comparison, compares user scores
@@ -213,10 +212,10 @@ class Post(db.Model):
         user_id - the id of the User that created the post
     '''
     id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(50))
+    title = db.Column(db.String(50), nullable=False)
     body = db.Column(db.String(25000))
-    timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         '''Prints when the object is called directly

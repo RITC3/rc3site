@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, g, Bluepri
 from flask.ext.login import login_required, current_user
 from datetime import datetime
 from app import db
-from app.models import Post
+from app.models import Post, User
 from app.forms import CKTextAreaField
 from flask.ext.admin import AdminIndexView, BaseView
 from flask_admin.contrib.sqla import ModelView
@@ -61,5 +61,8 @@ class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
-    def __init__(self, session):
-        super(PostModelView, self).__init__(Post, session)
+    can_post = User.query.filter_by(role=1).all()
+    #form_args = dict(author=dict(choices=can_post))
+    form_choices = {'author': can_post}
+    def __init__(self):
+        super(PostModelView, self).__init__(Post, db.session)
