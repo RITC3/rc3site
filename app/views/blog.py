@@ -7,6 +7,7 @@ from app.forms import CKTextAreaField
 from flask.ext.admin import AdminIndexView, BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
+from config import USER_ROLES
 
 blog = Blueprint('blog', __name__, subdomain='blog', static_folder="../static")
 
@@ -61,8 +62,12 @@ class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
-    can_post = User.query.filter_by(role=1).all()
+    can_post = [(x.id, x) for x in
+                User.query.filter_by(role=USER_ROLES['admin']).all()]
+    form_args = dict(
+        author=dict(
+            default=User.query.filter_by(role=USER_ROLES['admin']).first()
+        ))
     form_choices = {'author': can_post}
-    form_args = dict(author=dict(default=User.query.filter_by(id=1).first()))
     def __init__(self):
         super(PostModelView, self).__init__(Post, db.session)
