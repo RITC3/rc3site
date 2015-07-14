@@ -58,7 +58,6 @@ class EditForm(Form):
         major - the major form field, min = 0, max = 64
         newsletter - newsletter signup field
     '''
-    nickname = TextField('nickname', validators = [DataRequired()])
     about_me = TextAreaField('about_me', validators = [Length(min = 0, max = 300)])
     major = TextField('major', validators = [Length(min = 0, max = 64)])
     newsletter = BooleanField('newsletter', widget= widgets.CheckboxInput())
