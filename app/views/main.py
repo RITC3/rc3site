@@ -118,7 +118,7 @@ def authorized(response):
 
     #is the user either from RIT or explicitly allowed?
     alloweduser = AllowedUser.query.filter_by(email=me.data['email'], ban=False).first()
-    if me.data['email'][-7:].lower() != "rit.edu" and alloweduser is None:
+    if me.data['hd'] != "g.rit.edu" and alloweduser is None:
         me = None
         response = None
         logout_user()
@@ -146,6 +146,14 @@ def authorized(response):
                     username=username,
                     email=me.data['email'],
                     role=USER_ROLES['user'])
+        db.session.add(user)
+        db.session.commit()
+    if me.data['name'] and user.nickname is not me.data['name']:
+        user.nickname = me.data['name']
+        db.session.add(user)
+        db.session.commit()
+    elif me.data['given_name'] and user.nickname is not me.data['name']:
+        user.nickname = me.data['given_name']
         db.session.add(user)
         db.session.commit()
     login_user(user, remember = False)
