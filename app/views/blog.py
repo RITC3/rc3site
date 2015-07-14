@@ -62,7 +62,7 @@ class PostModelView(ProtectedModelView):
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
     can_post = User.query.filter_by(role=1).all()
-    #form_args = dict(author=dict(choices=can_post))
     form_choices = {'author': can_post}
+    form_args = dict(author=dict(default=User.query.filter_by(id=1).first()))
     def __init__(self):
         super(PostModelView, self).__init__(Post, db.session)
