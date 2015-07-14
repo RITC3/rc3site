@@ -170,4 +170,8 @@ pre {
     left:40% /*or whatever*/
     width:500px;
     z-index:100001;
- }
+}
+
+.bt-pad{
+    margin-top: 1em;
+}

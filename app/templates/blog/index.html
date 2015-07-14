@@ -5,9 +5,26 @@
 {% for post in posts %}
 <div class="row pad">
 <div class="row panel">
-    <h1 class="left">{{post.title}}</h1>
     <div class="row">
         <div class="small-12 columns">
+            <h1 class="left">{{post.title}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-1 columns">
+            <img src="{{post.author.avatar(46)}}">
+        </div>
+        <div class="small-2 columns left">
+            <div class="row">
+                {{post.author.nickname}}
+            </div>
+            <div class="row">
+                <em>{{post.timestamp.strftime('%B %d, %Y')}}</em>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 columns bt-pad">
             {{post.body | safe}}
         </div>
     </div>
