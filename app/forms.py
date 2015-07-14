@@ -67,24 +67,6 @@ class EditForm(Form):
         '''
         Form.__init__(self, *args, **kwargs)
 
-    def validate(self):
-        '''validate the form input
-        Extra conditions:
-            nickname name must be unique
-            nickname name must be changed
-        Returns: True on sucessful validation, False when validation fails
-        '''
-        if not Form.validate(self):
-            return False
-        if self.nickname.data == self.original_nickname:
-            return True
-        user = User.query.filter_by(nickname = self.nickname.data).first()
-        if user is not None:
-            self.nickname.errors.append('This nickname is already in use. Please choose another one.')
-            return False
-        return True
-
-
 class Edit_Challenge(Form):
     '''Form for editing a challenge
     Parent: flask.ext.wtf.Form
