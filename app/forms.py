@@ -62,14 +62,10 @@ class EditForm(Form):
     major = TextField('major', validators = [Length(min = 0, max = 64)])
     newsletter = BooleanField('newsletter', widget= widgets.CheckboxInput())
 
-    def __init__(self, original_nickname, *args, **kwargs):
-        '''initializes the class, calls parent class __init__ and sets original
-        nickname
-        args:
-            original_nickname - the nickname before the update
+    def __init__(self, *args, **kwargs):
+        '''initializes the class, calls parent class __init__
         '''
         Form.__init__(self, *args, **kwargs)
-        self.original_nickname = original_nickname
 
     def validate(self):
         '''validate the form input

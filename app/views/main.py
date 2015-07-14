@@ -195,9 +195,8 @@ def edit():
     Returns: The profile editing page or the user's profile page when the edit
              is committed
     '''
-    form = EditForm(g.user.nickname)
+    form = EditForm()
     if form.validate_on_submit():
-        g.user.nickname = form.nickname.data
         g.user.about_me = form.about_me.data
         g.user.major = form.major.data
         if form.newsletter.data:
@@ -209,7 +208,6 @@ def edit():
         flash('Your changes have been saved.')
         return redirect(url_for('main.user', username=g.user.username))
     else:
-        form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
         form.major.data = g.user.major
         if g.user.newsletter == 1:
