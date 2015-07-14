@@ -4,6 +4,7 @@ from datetime import datetime
 from app import db
 from app.models import Post, User
 from app.forms import CKTextAreaField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask.ext.admin import AdminIndexView, BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
@@ -62,12 +63,11 @@ class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
-    can_post = [(x.id, x) for x in
-                User.query.filter_by(role=USER_ROLES['admin']).all()]
     form_args = dict(
         author=dict(
-            default=User.query.filter_by(role=USER_ROLES['admin']).first()
+            default=User.query.filter_by(role=USER_ROLES['admin']).first(),
+            query_factory=lambda: [current_user]
         ))
-    form_choices = {'author': can_post}
+
     def __init__(self):
         super(PostModelView, self).__init__(Post, db.session)
