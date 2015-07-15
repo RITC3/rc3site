@@ -179,7 +179,6 @@ pre {
 .imgselect {
     height: auto;
     width: auto;
-    max-width: 150px;
-    max-height: 150px;
+    height: 150px;
     padding: 1em;
 }

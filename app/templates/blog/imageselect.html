@@ -7,12 +7,18 @@
     <body>
         <div id="imgform" class="row">
             <form>
+                <ul class="small-block-grid-5 center">
             {% for name, link in files %}
+            <li>
+                <div class="row">
+                    <img class="imgselect" src="{{link}}" title="{{name}}">
+                </div>
                 <div class="row">
                     <input type="radio" name="selectedfile" id="selectedfile" value="{{link}}">
-                    <img class="imgselect" src="{{link}}">{{name}}
                 </div>
+            </li>
             {% endfor %}
+            </ul>
             <input class="button" type="submit" value="Submit">
             </form>
         </div>
@@ -24,7 +30,7 @@
         <script>
             $(document).foundation();
             $('#imgform').on('submit', function () {
-                var fileUrl = $('#selectedfile').val();
+                var fileUrl = document.forms[0].selectedfile.value
                 var funcNum = {{cknum}};
                 window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
                 close();
