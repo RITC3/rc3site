@@ -6,7 +6,8 @@
 $(document).ready(function(){
     var text = $("#body").val();
     CKEDITOR.replace('body', {
-        filebrowserBrowseUrl: '/admin/imageselect'
+        filebrowserBrowseUrl: '/admin/imageselect',
+        filebrowserUploadUrl: '/admin/protectedfileadmin/upload/'
     });
     CKEDITOR.instances.body.setData(text);
 });
