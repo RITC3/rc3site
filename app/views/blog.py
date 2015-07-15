@@ -9,6 +9,7 @@ from flask.ext.admin import AdminIndexView, BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
 from config import USER_ROLES
+from sqlalchemy import desc
 
 blog = Blueprint('blog', __name__, subdomain='blog', static_folder="../static")
 
@@ -29,7 +30,7 @@ def before_request():
 @blog.route('/')
 @blog.route('/index')
 def index():
-    posts = Post.query.all()
+    posts = Post.query.order_by(desc(Post.timestamp))
     return render_template('blog/index.html', posts=posts)
 
 @blog.route('/post/<num>')
@@ -63,6 +64,7 @@ class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
+    column_default_sort = ('id', True)
     form_args = dict(
         author=dict(
             default=User.query.filter_by(role=USER_ROLES['admin']).first(),
