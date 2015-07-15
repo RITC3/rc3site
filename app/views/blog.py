@@ -64,7 +64,7 @@ class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
     form_overrides = dict(body=CKTextAreaField)
-    column_formatters=dict(body=lambda a: a.split(" ")[:50])
+    column_formatters=dict(body=lambda view, context, model, name: model.body.split(" ")[:50])
     column_default_sort = ('id', True)
     form_args = dict(
         author=dict(
