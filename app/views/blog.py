@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, g, Blueprint
+from flask import render_template, flash, redirect, url_for, request, g, Blueprint, abort
 from flask.ext.login import login_required, current_user
 from datetime import datetime
 from app import db
@@ -8,8 +8,9 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask.ext.admin import AdminIndexView, BaseView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
-from config import USER_ROLES
+from config import USER_ROLES, basedir
 from sqlalchemy import desc
+import os
 
 blog = Blueprint('blog', __name__, subdomain='blog', static_folder="../static")
 
@@ -63,7 +64,7 @@ class ProtectedFileAdmin(FileAdmin, ProtectedBaseView):
 class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
-    form_overrides = dict(body=CKTextAreaField)
+    #form_overrides = dict(body=CKTextAreaField)
     column_formatters=dict(body=lambda view, context, model, name: ' '.join(model.body.split(" ")[:50]))
     column_default_sort = ('id', True)
     form_args = dict(
@@ -74,3 +75,15 @@ class PostModelView(ProtectedModelView):
 
     def __init__(self):
         super(PostModelView, self).__init__(Post, db.session)
+
+@blog.route("/admin/imageselect", methods=['GET','POST'])
+@login_required
+def imageselect():
+    if not is_admin():
+        abort(404)
+    files = os.listdir(os.path.join(basedir, 'app/static/bloguploads'))
+    files = [ (f, os.path.join('/static/bloguploads', f)) for f in files ]
+    return render_template("blog/imageselect.html",
+                           title="Select image",
+                           files=files,
+                           cknum=request.args['CKEditorFuncNum'])

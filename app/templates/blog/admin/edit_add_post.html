@@ -1,5 +1,14 @@
 {% extends 'admin/model/edit.html' %}
-{% block head %}
+{% block tail %}
     {{super()}}
     <script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script>
+$(document).ready(function(){
+    var text = $("#body").val();
+    CKEDITOR.replace('body', {
+        filebrowserBrowseUrl: '/admin/imageselect'
+    });
+    CKEDITOR.instances.body.setData(text);
+});
+</script>
 {% endblock %}

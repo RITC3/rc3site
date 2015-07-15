@@ -175,3 +175,11 @@ pre {
 .bt-pad{
     margin-top: 1em;
 }
+
+.imgselect {
+    height: auto;
+    width: auto;
+    max-width: 150px;
+    max-height: 150px;
+    padding: 1em;
+}

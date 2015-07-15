@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <link href="/static/css/foundation.css" rel="stylesheet">
+        <link href="/static/css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/foundation-icons/foundation-icons.css">
+    </head>
+    <body>
+        <div id="imgform" class="row">
+            <form>
+            {% for name, link in files %}
+                <div class="row">
+                    <input type="radio" name="selectedfile" id="selectedfile" value="{{link}}">
+                    <img class="imgselect" src="{{link}}">{{name}}
+                </div>
+            {% endfor %}
+            <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
+    </body>
+    <footer>
+        <script src="/static/js/vendor/jquery.js"></script>
+        <script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+        <script src="/static/js/foundation/foundation.min.js"></script>
+        <script>
+            $(document).foundation();
+            $('#imgform').on('submit', function () {
+                var fileUrl = $('#selectedfile').val();
+                var funcNum = {{cknum}};
+                window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+                close();
+            });
+        </script>
+    </footer>
+</html>
