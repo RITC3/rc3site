@@ -31,7 +31,7 @@ def before_request():
 @blog.route('/')
 @blog.route('/index')
 def index():
-    posts = Post.query.order_by(desc(Post.timestamp))
+    posts = Post.query.filter_by(draft=False).order_by(Post.id.desc()).all()
     return render_template('blog/index.html', posts=posts)
 
 @blog.route('/post/<num>')
@@ -64,7 +64,7 @@ class ProtectedFileAdmin(FileAdmin, ProtectedBaseView):
 class PostModelView(ProtectedModelView):
     edit_template = 'blog/admin/edit_add_post.html'
     create_template = 'blog/admin/edit_add_post.html'
-    #form_overrides = dict(body=CKTextAreaField)
+    form_overrides = dict(body=CKTextAreaField)
     column_formatters=dict(body=lambda view, context, model, name: ' '.join(model.body.split(" ")[:50]))
     column_default_sort = ('id', True)
     form_args = dict(
@@ -85,5 +85,5 @@ def imageselect():
     files = [ (f, os.path.join('/static/bloguploads', f)) for f in files ]
     return render_template("blog/imageselect.html",
                            title="Select image",
-                           files=files,
+                           files=files[:100], #perhaps make pages instead
                            cknum=request.args['CKEditorFuncNum'])
