@@ -289,7 +289,7 @@ def add_points(user_id, challenge_id, points):
     """
     existing_score = \
         Score.query.filter_by(user_id=user_id,
-                                challenge_id=challenge_id)
+                                challenge_id=challenge_id).first()
     if existing_score:
         existing_score.points = points
         db.session.add(existing_score)
@@ -335,8 +335,15 @@ def admin():
     mass_score = Mass_Update_Score()
     mass_score.challenge.choices = challenges
     if request.form.get('submit', None) == 'Mass Update Score':
-        for user in mass_score.massbox.data.split('\n'):
-            print user
+        for line in mass_score.massbox.data.split('\n'):
+            user, points = line.split(",")
+            try:
+                userobj = User.query.filter_by(email=user + "@g.rit.edu").one()
+                if not add_points(userobj.id, mass_score.challenge.data, points):
+                    flash('Score updated for ' + user)
+            except:
+                flash('User ' + user + " doesn't exist or doesn't have an RIT email address")
+
 
 
     #single score creating panel
@@ -347,9 +354,9 @@ def admin():
             if add_points(update_score.user.data,
                           update_score.challenge.data,
                           update_score.points.data):
-                flash('Score updated!')
-            else:
                 flash('Score created!')
+            else:
+                flash('Score updated!')
             return redirect(url_for('main.admin'))
 
     #newsletter composing and sending panel

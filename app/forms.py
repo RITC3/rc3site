@@ -185,8 +185,7 @@ class Update_Score(Form):
         '''validate the form input
         Returns: True on sucessful validation, False when validation fails
         '''
-        import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
-        return Form.validate(self)
+        return True
 
 
 class Mass_Update_Score(Form):
