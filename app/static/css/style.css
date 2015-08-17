@@ -182,3 +182,15 @@ pre {
     height: 150px;
     padding: 1em;
 }
+
+.positions {
+    margin-bottom: 1em;
+}
+
+.divdivider{
+    position:absolute;
+    left:50%;
+    top:10%;
+    bottom:10%;
+    border-left:1px solid white;
+}
