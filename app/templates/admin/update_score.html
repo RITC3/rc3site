@@ -19,3 +19,22 @@
         </form>
     </div>
 </div>
+
+<div class="large-7 columns">
+    <h4><strong>Mass Update Score</strong></h4>
+    <div class="panel">
+        <form action="" method="POST" name="mass_score">
+            {{ADMIN_FORMS['mass_score'].hidden_tag()}}
+            {% for error in ADMIN_FORMS['mass_score'].errors.user %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['mass_score'].errors.challenge %}<span style="color: red;">{{error}}</span>{% endfor %}
+            {% for error in ADMIN_FORMS['mass_score'].errors.points %}<span style="color: red;">{{error}}</span>{% endfor %}
+            <div class="large-4 columns">
+                <label>Challenge {{ADMIN_FORMS['mass_score'].challenge}}</label>
+            </div>
+            <div class="large-5 columns">
+                <label>Enter user,points. One per line {{ADMIN_FORMS['mass_score'].massbox}}</label>
+            </div>
+            {{ADMIN_FORMS['mass_score'].submit(class="button", value = 'Mass Update Score')}}
+        </form>
+    </div>
+</div>

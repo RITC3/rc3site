@@ -280,6 +280,32 @@ def about():
     '''
     return render_template('about.html', title='About')
 
+def add_points(user_id, challenge_id, points):
+    """ add_points - adds or updates points for a user
+        args:
+            user_id - the id of the user who's score needs to be updates
+            challenge_id - the id of the challenge to associate the points with
+            points - the number of points to add
+    """
+    existing_score = \
+        Score.query.filter_by(user_id=user_id,
+                                challenge_id=challenge_id)
+    if existing_score:
+        existing_score.points = points
+        db.session.add(existing_score)
+        db.session.commit()
+        return False
+    else:
+        semester_id = Challenge.query.filter_by(
+            id=challenge_id
+            ).first().semester_id
+        new_score = Score(user_id=user_id,
+                            challenge_id=challenge_id,
+                            points=points,
+                            semester_id=semester_id)
+        db.session.add(new_score)
+        db.session.commit()
+        return True
 
 @main.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -304,33 +330,27 @@ def admin():
             flash('Challenge created!')
             return redirect(url_for('main.admin'))
 
-    #score creating panel
+    challenges = [(c.id, c.name) for c in Challenge.query.filter_by(semester_id=sess_sem.id).all()]
+    #mass score creating panel
+    mass_score = Mass_Update_Score()
+    mass_score.challenge.choices = challenges
+    if request.form.get('submit', None) == 'Mass Update Score':
+        for user in mass_score.massbox.data.split('\n'):
+            print user
+
+
+    #single score creating panel
     update_score = Update_Score()
-    update_score.challenge.choices = \
-        [(c.id, c.name) for c in Challenge.query.filter_by(semester_id=sess_sem.id).all()]
+    update_score.challenge.choices = challenges
     if request.form.get('submit', None) == 'Update Score':
         if update_score.validate_on_submit():
-            existing_score = \
-                Score.query.filter_by(user_id=update_score.data['user'],
-                                      challenge_id=update_score.data['challenge']).first()
-            if existing_score:
-                existing_score.points = update_score['points'].data
-                db.session.add(existing_score)
-                db.session.commit()
+            if add_points(update_score.user.data,
+                          update_score.challenge.data,
+                          update_score.points.data):
                 flash('Score updated!')
-                return redirect(url_for('main.admin'))
             else:
-                semester_id = Challenge.query.filter_by(
-                    id=update_score.data['challenge']
-                    ).first().semester_id
-                new_score = Score(user_id=update_score.data['user'],
-                                  challenge_id=update_score.data['challenge'],
-                                  points=update_score.data['points'],
-                                  semester_id=semester_id)
-                db.session.add(new_score)
-                db.session.commit()
                 flash('Score created!')
-                return redirect(url_for('main.admin'))
+            return redirect(url_for('main.admin'))
 
     #newsletter composing and sending panel
     newsletter_form = Send_Newsletter()
@@ -439,7 +459,8 @@ def admin():
                    'add_presentation': add_pres,
                    'edit_presentation': edit_pres,
                    'delete_presentation': del_pres,
-                   'add_allowed_user': add_allowed_user}
+                   'add_allowed_user': add_allowed_user,
+                   'mass_score': mass_score}
     return render_template('admin.html', title='Admin', ADMIN_FORMS=ADMIN_FORMS)
 
 @main.route('/mailinglist')

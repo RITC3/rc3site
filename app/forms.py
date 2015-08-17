@@ -185,7 +185,21 @@ class Update_Score(Form):
         '''validate the form input
         Returns: True on sucessful validation, False when validation fails
         '''
+        import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
         return Form.validate(self)
+
+
+class Mass_Update_Score(Form):
+    '''Form to update the score for multiple users if need be (finally)
+    Parent: flask.ext.wtf.Form
+    Attributes:
+        challenge - the challenge selection list
+        massbox - the box to put scores in (jmg2967,10)
+        submit - the submit field button
+    '''
+    challenge = SelectField('challenge', choices =[])
+    massbox = TextAreaField('massbox', validators= [DataRequired()])
+    submit = SubmitField('submit')
 
 
 class Add_Subscriber(Form):
