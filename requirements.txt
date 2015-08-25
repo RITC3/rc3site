@@ -3,4 +3,6 @@ Flask-Oauthlib
 Flask-WTF
 Flask-SQLAlchemy
 Flask-Login
+flup
+Flask-Admin
 Flask-Migrate
