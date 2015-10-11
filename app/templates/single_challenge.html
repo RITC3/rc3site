@@ -6,7 +6,7 @@
 <div class="small-8 columns panel">
         <h3>About</h3>
         <p>
-        <div class="small-12 columns about-info" data-equalizer-watch>{{challenge.about}}</div></p>
+        <div class="small-12 columns about-info" data-equalizer-watch>{{challenge.about|safe}}</div></p>
         {% if challenge.total_users() > 0 %}
         <h3>Scores</h3>
         <p>
