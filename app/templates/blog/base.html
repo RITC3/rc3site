@@ -57,7 +57,7 @@ ga('create', 'UA-54644206-2', 'auto');
                     <li class="divider"></li>
                         <li><a href="{{ url_for('.index') }}"><i class="fa fa-home"></i></a></li>
                     <li class="divider"></li>
-                    {% if g.user.is_authenticated() and g.user.role %}
+                    {% if g.user.is_authenticated and g.user.role %}
                     <li class="divider"></li>
                     <li><a href="{{ url_for('admin.index') }}"><i class="fa fi-wrench"></i> Admin</a></li>
                     <li class="divider"></li>

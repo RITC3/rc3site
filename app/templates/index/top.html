@@ -9,7 +9,7 @@
     </div>
     
     <div class="small-7 columns home-login">
-    {% if g.user.is_authenticated() %}
+    {% if g.user.is_authenticated %}
         <h4>Welcome {{g.user.nickname}}!</h4>
     {% else %}
         <a href="{{ url_for('login') }}" class="zocial googleplus">Sign in with RIT Google</a>

@@ -53,7 +53,7 @@ def before_request():
             not in [ i.lname for i in g.semesters ]:
         session['semester'] = g.csemester.lname
     g.semester = session['semester']
-    if g.user.is_authenticated():
+    if g.user.is_authenticated:
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
