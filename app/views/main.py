@@ -436,13 +436,12 @@ def admin():
     del_pres.pres.choices = [ (x.id, "Week {} - {}".format(x.week, x.name))
                              for x in Presentation.query.filter_by(semester_id=sess_sem.id) ]
     if request.form.get('submit', None) == 'Delete Presentation':
-        if edit_pres.validate_on_submit():
-            pres = Presentation.query.filter_by(id=del_pres.data['pres']).first()
-            name = "Week {} - {}".format(pres.week, pres.name)
-            db.session.delete(pres)
-            db.session.commit()
-            flash("{} deleted".format(name))
-            return redirect(url_for('main.admin'))
+        pres = Presentation.query.filter_by(id=del_pres.data['pres']).first()
+        name = "Week {} - {}".format(pres.week, pres.name)
+        db.session.delete(pres)
+        db.session.commit()
+        flash("{} deleted".format(name))
+        return redirect(url_for('main.admin'))
 
     #allowed user panel
     add_allowed_user = AddAllowedUser()
