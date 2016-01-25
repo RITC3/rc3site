@@ -280,6 +280,10 @@ def about():
     '''
     return render_template('about.html', title='About')
 
+@main.route('/sponsors')
+def sponsors():
+    return render_template('sponsors.html', title="Sponsors")
+
 def add_points(user_id, challenge_id, points):
     """ add_points - adds or updates points for a user
         args:

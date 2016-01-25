@@ -8,10 +8,6 @@ irsec = Blueprint('irsec', __name__, subdomain='irsec', static_folder="../static
 def index():
     return render_template('irsec/index.html', title="Home")
 
-@irsec.route('/sponsors')
-def sponsors():
-    return render_template('irsec/sponsors.html', title="Sponsors")
-
 @irsec.route('/signup')
 def signup():
     return render_template('irsec/signup.html', title="Signup")
