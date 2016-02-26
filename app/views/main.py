@@ -579,6 +579,7 @@ def subscribe():
     flash("You've been subscribed. To unsubscribe, go to your profile and choose Edit")
     return redirect(url_for('main.index'))
 
+@login_required
 @main.route('/signin')
 def signin():
     '''The signin link that redirects to the google form for signing in to a meeting
