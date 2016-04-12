@@ -7,3 +7,4 @@ db_repo*
 app.stuff
 app/static/bloguploads/*
 migrations
+.DS_Store

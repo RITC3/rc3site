@@ -14,6 +14,7 @@ SERVER_NAME = 'rc3.club'
 #setup database
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db') + '?check_same_thread=False'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 #get constants from file
 SECRET_KEY = f.readline().strip()
