@@ -107,7 +107,7 @@ class User(db.Model):
             size - the size of the gravatar requested
         Returns: The URL for the user's gravatar
         '''
-        return "http://www.gravatar.com/avatar/{0}?d=mm&s={1}".format(md5(self.email).hexdigest(), str(size))
+        return "https://www.gravatar.com/avatar/{0}?d=mm&s={1}".format(md5(self.email).hexdigest(), str(size))
 
     def __repr__(self):
         '''Prints when the object is called directly
