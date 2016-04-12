@@ -194,3 +194,7 @@ pre {
     bottom:10%;
     border-left:1px solid white;
 }
+
+.tier {
+    margin-bottom: 2em !important;
+}
