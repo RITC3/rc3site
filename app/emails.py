@@ -53,7 +53,7 @@ def send_newsletter(subject, body):
     '''
     users = [ x.email for x in User.query.filter_by(newsletter = 1).all() ]
     #rit doesn't just let you bcc everyone, chunks of 20 work
-    chunksize = 20
+    chunksize = 10
     for chunk in [users[x:x+chunksize] for x in range(0, len(users), chunksize)]:
         send_email(subject, chunk, body, body)
         sleep(0.05)
