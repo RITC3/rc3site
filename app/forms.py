@@ -244,8 +244,8 @@ class Permission_User(Form):
     '''
     userchoices = get_sorted_userlist()
     rolechoices = [ (USER_ROLES[x], x) for x in USER_ROLES ]
-    user = SelectField('user', choices = userchoices)
-    role = SelectField('role', choices = rolechoices)
+    user = SelectField('user', choices = userchoices, coerce=int)
+    role = SelectField('role', choices = rolechoices, coerce=int)
     position = TextField('position')
     submit = SubmitField('submit')
 
