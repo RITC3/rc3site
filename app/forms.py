@@ -172,8 +172,8 @@ class Update_Score(Form):
         submit - the submit field button
     '''
     userchoices = get_sorted_userlist()
-    user = SelectField('user', choices = userchoices)
-    challenge = SelectField('challenge', choices =[])
+    user = SelectField('user', choices = userchoices, coerce=int)
+    challenge = SelectField('challenge', choices =[], coerce=int)
     points = IntegerField('points', validators = [DataRequired()])
     submit = SubmitField('submit')
 
@@ -196,7 +196,7 @@ class Mass_Update_Score(Form):
         massbox - the box to put scores in (jmg2967,10)
         submit - the submit field button
     '''
-    challenge = SelectField('challenge', choices =[])
+    challenge = SelectField('challenge', choices =[], coerce=int)
     massbox = TextAreaField('massbox', validators= [DataRequired()])
     submit = SubmitField('submit')
 
