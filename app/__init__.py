@@ -89,7 +89,7 @@ admin.add_view(blog.PostModelView())
 admin.add_view(blog.ProtectedFileAdmin(os.path.join(basedir, 'app/static/bloguploads'), '/static/bloguploads/', name="Blog Uploads"))
 
 #blueprints are each section of the app
-app.register_blueprint(blog.blog)
+#app.register_blueprint(blog.blog)
 app.register_blueprint(irsec.irsec)
 app.register_blueprint(main.main)
 
