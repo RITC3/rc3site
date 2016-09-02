@@ -55,11 +55,6 @@ ga('create', 'UA-54644206-2', 'auto');
                     </li>
                     <li class="divider"></li>
                     <li><a href="{{ url_for('main.challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
-                    <li class="divider"></li>
-                    <li><a href="https://www.youtube.com/channel/UC4kiSSIWzb4vjFn_xMYuqQg"><i class="fa fa-globe"></i>YouTube</a></li>
-                    <li class="divider"></li>
-                    <li><a href="{{ url_for('main.challenges') }}"><i class="fa fa-globe"></i> Challenges</a></li>
-		    <li class="divider"></li>
                     {% if g.user.is_authenticated %}
                     <!--<li><a href=" url_for('main.news') "><i class="fa fa-newspaper-o"></i> News</a></li>-->
                         <li class="divider"></li>
@@ -72,7 +67,15 @@ ga('create', 'UA-54644206-2', 'auto');
 
                         {% endif %}
                         <li><a href="{{ url_for('main.resources') }}"><i class="fa fi-page-multiple"></i> Resources</a></li>
-                        <li class="divider"></li>
+                    {% endif %}
+
+                    <li class="divider"></li>
+                    <li><a href="{{ url_for('.sponsors') }}"><i class="fa fa-thumbs-up"></i> Sponsors</a></li>
+                    <li class="divider"></li>
+                    <li><a href="https://www.youtube.com/channel/UC4kiSSIWzb4vjFn_xMYuqQg"><i class="fa fa-youtube"></i> YouTube</a></li>
+			
+                    <li class="divider"></li>
+                    {% if g.user.is_authenticated %}
                         <li><a href="{{ url_for('main.logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
 
                     {% else %}
@@ -80,9 +83,6 @@ ga('create', 'UA-54644206-2', 'auto');
                         <li><a href="{{ url_for('login') }}"><i class="fa fa-user"></i> Login</a></li>
 
                     {% endif %}
-
-                    <li class="divider"></li>
-                    <li><a href="{{ url_for('.sponsors') }}"><i class="fa fa-thumbs-up"></i> Sponsors</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url_for('main.about') }}"><i class="fa fa-question-circle"></i> About</a></li>
                     <li class="divider"></li>
